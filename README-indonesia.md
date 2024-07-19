@@ -6,6 +6,8 @@ Al-Quran, teks kuno yang berasal dari abad ke-7 Masehi, telah lama menjadi subje
 
 Mari kita bersama-sama menjelajahi keajaiban matematika yang tersembunyi dalam struktur Al-Quran. Buka spreadsheet di bawah ini dan ikuti analisis ini langkah demi langkah.
 
+![Link Excel](https://github.com/mirzaakhena/Quran-Checksum/blob/main/Checksum-AlQuran-Table.xlsx)
+
 ![Link Excel](https://github.com/mirzaakhena/Quran-Checksum/blob/main/Table-Screenshot.png)
 
 ## Metodologi
