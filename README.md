@@ -6,7 +6,7 @@ The Quran, an ancient text originating from the 7th century CE, has long been a 
 
 Let's together explore the mathematical wonders hidden in the structure of the Quran. Open the spreadsheet below and follow this analysis step by step.
 
-[Link Excel](https://github.com/mirzaakhena/Quran-Checksum/blob/main/Checksum-AlQuran-Table.xlsx)
+Go to [Excel Link](https://github.com/mirzaakhena/Quran-Checksum/blob/main/Checksum-AlQuran-Table.xlsx) then click the Button "Download raw file" to downlod the excel file.
 
 ![Link Excel](https://github.com/mirzaakhena/Quran-Checksum/blob/main/Table-Screenshot.png)
 
