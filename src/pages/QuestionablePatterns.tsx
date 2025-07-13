@@ -105,10 +105,10 @@ export default function QuestionablePatterns() {
     }
   ]
 
-  const getRiskColor = (level: number): string => {
-    if (level <= 2) return 'yellow'
-    return 'red'
-  }
+  // const getRiskColor = (level: number): string => {
+  //   if (level <= 2) return 'yellow'
+  //   return 'red'
+  // }
 
   const getRiskText = (level: number): string => {
     if (level <= 2) return 'Medium Risk'

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { QuranSurah, ChecksumResults, PatternValidation } from '../../types'
+import { QuranSurah, PatternValidation } from '../../types'
 import { quranData } from '../../data/quran'
 import { calculatePatterns, validatePatterns, isPrime, getNthPrime, calculateGoldenRatioDetails, isRepetitiveColumnCValue, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../utils/calculations'
 import PatternModal from './PatternModal'
