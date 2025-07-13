@@ -57,7 +57,7 @@ export default function NaturalPatterns() {
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-4-combo1">
           <h3 className="font-bold text-lg mb-2">Pattern 4: Parity Matrix</h3>
-          <p className="text-gray-600 mb-3">30-27-27-30 combinations</p>
+          <p className="text-gray-600 mb-3">30-27-30-27 combinations</p>
           <div className="text-2xl font-bold text-pattern-4-combo1">
             {results.evenSurahEvenVerses}-{results.evenSurahOddVerses}-{results.oddSurahEvenVerses}-{results.oddSurahOddVerses}
           </div>
@@ -68,7 +68,7 @@ export default function NaturalPatterns() {
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-9-prime">
           <h3 className="font-bold text-lg mb-2">Pattern 9: Prime Sum</h3>
-          <p className="text-gray-600 mb-3">Z+AA=6236 relationship</p>
+          <p className="text-gray-600 mb-3">1076+5160=6236 relationship</p>
           <div className="text-2xl font-bold text-pattern-9-prime">
             {results.primeVerses + results.nthPrimeSum}
           </div>
