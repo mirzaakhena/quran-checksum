@@ -80,8 +80,9 @@ Create an interactive React application demonstrating Quran checksum patterns th
   - [ ] Historical context information
 
 - [ ] **User Experience**
-  - [x] Enhanced sticky header functionality (frosted glass effect, better shadows)
+  - [x] Enhanced sticky header functionality (Pattern Summary Bar + Table Header both stick)
   - [x] Fixed horizontal scroll issue (table now fits viewport without arrows)
+  - [x] Fixed broken table layout during scroll (simplified table structure, no more layout breaks)
   - [ ] Mobile-responsive design
   - [ ] Loading states and animations
   - [ ] Keyboard navigation support
@@ -125,7 +126,7 @@ Create an interactive React application demonstrating Quran checksum patterns th
 - [ ] **Pattern 3**: Gold highlighting for 3303 values
 - [ ] **Pattern 4**: Four distinct colors for parity combinations
 - [ ] **Pattern 9**: Purple for prime-related calculations
-- [ ] **Pattern 10**: Gradient for repetitive (warm) vs non-repetitive (cool)
+- [x] **Pattern 10**: Gradient for repetitive (warm) vs non-repetitive (cool) ✅ COMPLETED
 
 ### Interactive States
 - [ ] Hover effects for all clickable elements
@@ -180,7 +181,27 @@ Create an interactive React application demonstrating Quran checksum patterns th
 - ✅ **Both issues resolved**: Table now fully functional as designed
 
 **Phase 4 Enhancement Applied (July 13, 2025):**
-- ✅ **Enhanced sticky header functionality**: Added frosted glass effect with backdrop blur, improved shadows, and semi-transparent backgrounds for better visual hierarchy when scrolling
+- ✅ **Enhanced sticky header functionality**: Pattern Summary Bar and Table Header both stick properly when scrolling through table data
 - ✅ **Fixed horizontal scroll issue**: Removed `overflow-x-auto`, implemented `table-fixed` layout with optimized column widths, eliminated black scroll arrows
+- ✅ **Fixed broken table layout**: Simplified table structure using `border-collapse`, removed complex sticky positioning conflicts, stable layout during scroll
+- ✅ **Improved table layout**: Restructured with proper scrollable container, frosted glass effects, and backdrop blur for professional appearance
 
 **Next Priority**: Continue Phase 4 (Enhanced Features) - UI/UX improvements in progress.
+
+**Source of Truth Fix Applied (July 13, 2025):**
+- ✅ **Fixed validation inconsistency**: Both `PatternSummaryCard` (NaturalPatterns.tsx) and `PatternSummaryBar` (InteractiveTable.tsx) now use the same centralized `validatePatterns()` function
+- ✅ **Exported helper functions**: `calculatePattern3Values()`, `calculatePattern4Counts()`, and `calculatePattern9Values()` are now exported from `calculations.ts` for component reuse
+- ✅ **Eliminated duplicate calculations**: Removed inline calculation logic from InteractiveTable.tsx and replaced with centralized function calls
+- ✅ **Maintained consistency**: Both components now show identical validation results, eliminating "source of truth" principle violation
+
+**Latest Enhancement (July 13, 2025):**
+- ✅ **Pattern 10 Golden Ratio Visualization**: Enhanced Column C with visual differentiation between repetitive (orange, bold) and non-repetitive (blue, normal) Column C values (A+B)
+- ✅ **Golden Ratio Details Card**: Added comprehensive breakdown showing specific Column C values, sums, and ratio calculation
+- ✅ **Interactive Pattern 10**: Column C now highlights which A+B values contribute to the golden ratio pattern
+- ✅ **Fixed Pattern 10 Logic**: Corrected to analyze Column C values (chapter + verses) instead of just verse counts
+
+**Critical Pattern 10 Bug Fix (July 13, 2025):**
+- ✅ **Fixed Golden Ratio Calculation**: Corrected `calculatePatterns()` function to use sums instead of counts for golden ratio calculation
+- ✅ **Matched Go Implementation**: Now calculates `repetitiveSum / nonRepetitiveSum` instead of `repetitiveCount / nonRepetitiveCount`
+- ✅ **Expected Result**: Golden ratio now shows φ = 1.618424 (7906/4885) with ✅ validation status
+- ✅ **Issue Resolution**: Pattern 10 should now display correctly in both PatternSummaryCard and PatternSummaryBar

@@ -18,7 +18,7 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
   useEffect(() => {
     const tooltipWidth = 320 // Approximate tooltip width
     const tooltipHeight = 300 // Approximate tooltip height
-    const offset = 100 // Distance from cursor
+    const offset = 50 // Distance from cursor
     const screenPadding = 20 // Padding from screen edges
 
     const viewportWidth = window.innerWidth

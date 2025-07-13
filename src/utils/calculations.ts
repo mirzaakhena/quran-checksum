@@ -28,6 +28,33 @@ export function validateQuestionablePatterns(results: QuestionableResults): Ques
 import { QuranSurah, ChecksumResults, PatternValidation } from '../types'
 import { quranData } from '../data/quran'
 
+// Extended interface for Pattern 10 golden ratio details
+export interface GoldenRatioDetails {
+  repetitiveValues: number[]  // List of Column C values (A+B) that appear more than once
+  nonRepetitiveValues: number[]  // List of Column C values (A+B) that appear only once
+  repetitiveSum: number  // Sum of all repetitive Column C values
+  nonRepetitiveSum: number  // Sum of all non-repetitive Column C values
+  repetitiveCount: number  // Total count of repetitive occurrences
+  nonRepetitiveCount: number  // Count of non-repetitive Column C values
+  goldenRatio: number  // repetitiveSum / nonRepetitiveSum
+  columnCFrequency: Map<number, number>  // Map of Column C value to frequency
+  repetitiveBreakdown: RepetitiveValueBreakdown[]  // Detailed breakdown of repetitive values
+  nonRepetitiveBreakdown: NonRepetitiveValueBreakdown[]  // Detailed breakdown of non-repetitive values
+}
+
+// Detailed breakdown for each repetitive value
+export interface RepetitiveValueBreakdown {
+  columnCValue: number  // The Column C value (A+B)
+  frequency: number     // How many times it appears
+  surahs: number[]      // Which surahs have this value
+}
+
+// Detailed breakdown for each non-repetitive value
+export interface NonRepetitiveValueBreakdown {
+  columnCValue: number  // The Column C value (A+B)
+  surah: number         // Which surah has this value
+}
+
 // Prime number utilities
 export function isPrime(n: number): boolean {
   if (n < 2) return false
@@ -114,9 +141,11 @@ export function calculatePatterns(surahs: QuranSurah[]): ChecksumResults {
   let nthPrimeSum = 0
   
   // Golden ratio calculation
+  let repetitiveSum = 0
+  let nonRepetitiveSum = 0
   let repetitiveCount = 0
   let nonRepetitiveCount = 0
-  const verseCountMap = new Map<number, number>()
+  const columnCMap = new Map<number, number>()
   
   surahs.forEach((surah) => {
     const surahIsEven = surah.number % 2 === 0
@@ -142,22 +171,27 @@ export function calculatePatterns(surahs: QuranSurah[]): ChecksumResults {
       nthPrimeSum += getNthPrime(surah.verseCount)
     }
     
-    // Golden ratio - count repetitive vs non-repetitive verse counts
-    const count = verseCountMap.get(surah.verseCount) || 0
-    verseCountMap.set(surah.verseCount, count + 1)
+    // Golden ratio - count frequency of Column C values (A+B)
+    const columnCValue = surah.number + surah.verseCount  // A + B
+    const count = columnCMap.get(columnCValue) || 0
+    columnCMap.set(columnCValue, count + 1)
   })
   
-  // Count repetitive (appears more than once) vs non-repetitive verse counts
-  verseCountMap.forEach((count) => {
-    if (count > 1) {
-      repetitiveCount += count
+  // Calculate repetitive vs non-repetitive sums (matching Go implementation)
+  surahs.forEach((surah) => {
+    const columnCValue = surah.number + surah.verseCount  // A + B
+    const frequency = columnCMap.get(columnCValue) || 0
+    if (frequency > 1) {
+      repetitiveSum += columnCValue
+      repetitiveCount++
     } else {
+      nonRepetitiveSum += columnCValue
       nonRepetitiveCount++
     }
   })
   
-  // Calculate golden ratio
-  const goldenRatio = repetitiveCount / nonRepetitiveCount
+  // Calculate golden ratio (sum of repetitive / sum of non-repetitive)
+  const goldenRatio = nonRepetitiveSum !== 0 ? repetitiveSum / nonRepetitiveSum : 0
   
   return {
     sumSurahNumbers,
@@ -176,6 +210,93 @@ export function calculatePatterns(surahs: QuranSurah[]): ChecksumResults {
     repetitiveCount,
     nonRepetitiveCount
   }
+}
+
+// Calculate detailed golden ratio information for Pattern 10
+export function calculateGoldenRatioDetails(surahs: QuranSurah[]): GoldenRatioDetails {
+  const columnCFrequency = new Map<number, number>()
+  const columnCToSurahs = new Map<number, number[]>()
+  const repetitiveValues: number[] = []
+  const nonRepetitiveValues: number[] = []
+  const repetitiveBreakdown: RepetitiveValueBreakdown[] = []
+  const nonRepetitiveBreakdown: NonRepetitiveValueBreakdown[] = []
+  
+  // Count frequency of each Column C value (A+B) and track which surahs have each value
+  surahs.forEach((surah) => {
+    const columnCValue = surah.number + surah.verseCount  // A + B
+    const count = columnCFrequency.get(columnCValue) || 0
+    columnCFrequency.set(columnCValue, count + 1)
+    
+    // Track which surahs have this Column C value
+    const surahList = columnCToSurahs.get(columnCValue) || []
+    surahList.push(surah.number)
+    columnCToSurahs.set(columnCValue, surahList)
+  })
+  
+  // Separate repetitive (frequency > 1) vs non-repetitive (frequency = 1)
+  columnCFrequency.forEach((frequency, columnCValue) => {
+    if (frequency > 1) {
+      repetitiveValues.push(columnCValue)
+      // Create detailed breakdown for repetitive values
+      const surahs = columnCToSurahs.get(columnCValue) || []
+      repetitiveBreakdown.push({
+        columnCValue,
+        frequency,
+        surahs: surahs.sort((a, b) => a - b)
+      })
+    } else {
+      nonRepetitiveValues.push(columnCValue)
+      // Create detailed breakdown for non-repetitive values
+      const surahs = columnCToSurahs.get(columnCValue) || []
+      nonRepetitiveBreakdown.push({
+        columnCValue,
+        surah: surahs[0]  // Only one surah since frequency = 1
+      })
+    }
+  })
+  
+  // Calculate sums
+  let repetitiveSum = 0
+  let repetitiveCount = 0
+  let nonRepetitiveSum = 0
+  let nonRepetitiveCount = 0
+  
+  surahs.forEach((surah) => {
+    const columnCValue = surah.number + surah.verseCount  // A + B
+    const frequency = columnCFrequency.get(columnCValue) || 0
+    if (frequency > 1) {
+      repetitiveSum += columnCValue
+      repetitiveCount++
+    } else {
+      nonRepetitiveSum += columnCValue
+      nonRepetitiveCount++
+    }
+  })
+  
+  const goldenRatio = repetitiveSum / nonRepetitiveSum
+  
+  return {
+    repetitiveValues: repetitiveValues.sort((a, b) => a - b),
+    nonRepetitiveValues: nonRepetitiveValues.sort((a, b) => a - b),
+    repetitiveSum,
+    nonRepetitiveSum,
+    repetitiveCount,
+    nonRepetitiveCount,
+    goldenRatio,
+    columnCFrequency,
+    repetitiveBreakdown: repetitiveBreakdown.sort((a, b) => a.columnCValue - b.columnCValue),
+    nonRepetitiveBreakdown: nonRepetitiveBreakdown.sort((a, b) => a.columnCValue - b.columnCValue)
+  }
+}
+
+// Helper function to check if a Column C value (A+B) is repetitive
+export function isRepetitiveColumnCValue(columnCValue: number, goldenRatioDetails?: GoldenRatioDetails): boolean {
+  if (!goldenRatioDetails) {
+    // Fallback calculation if details not provided
+    const details = calculateGoldenRatioDetails(quranData)
+    return details.repetitiveValues.includes(columnCValue)
+  }
+  return goldenRatioDetails.repetitiveValues.includes(columnCValue)
 }
 
 // Calculate questionable patterns (5-8)
@@ -286,8 +407,17 @@ export function calculateQuestionablePatterns(surahs: QuranSurah[]): Questionabl
   }
 }
 
-// Pattern validation functions
-export function validatePatterns(results: ChecksumResults): PatternValidation {
+// Enhanced validation function with actual table calculations
+export function validatePatternsWithTableData(results: ChecksumResults): PatternValidation {
+  // Calculate Pattern 3 values (F and G)
+  const pattern3Values = calculatePattern3Values()
+  
+  // Calculate Pattern 4 counts (H, I, J, K)
+  const pattern4Counts = calculatePattern4Counts()
+  
+  // Calculate Pattern 9 values (Z and AA)
+  const pattern9Values = calculatePattern9Values()
+  
   return {
     // Pattern 1: Perfect balance 6555/6236
     pattern1: results.sumSurahNumbers === 6555 && results.sumVerseCounts === 6236,
@@ -296,24 +426,29 @@ export function validatePatterns(results: ChecksumResults): PatternValidation {
     pattern2: results.evenSurahs === 57 && results.oddSurahs === 57,
     
     // Pattern 3: 3303 symmetry (F=G where F=chapter if total even, G=verses if total odd)
-    pattern3: calculatePattern3Values().F === 3303 && calculatePattern3Values().G === 3303,
+    pattern3: pattern3Values.F === 3303 && pattern3Values.G === 3303,
     
     // Pattern 4: 30-27-27-30 parity combinations (count of H, I, J, K)
-    pattern4: calculatePattern4Counts().H === 30 && 
-              calculatePattern4Counts().I === 27 &&
-              calculatePattern4Counts().J === 30 &&
-              calculatePattern4Counts().K === 27,
+    pattern4: pattern4Counts.H === 30 && 
+              pattern4Counts.I === 27 &&
+              pattern4Counts.J === 30 &&
+              pattern4Counts.K === 27,
     
     // Pattern 9: Z+AA=6236 (prime verses + nth prime sum)
-    pattern9: calculatePattern9Values().Z + calculatePattern9Values().AA === 6236,
+    pattern9: (pattern9Values.Z + pattern9Values.AA) === 6236,
     
     // Pattern 10: Golden ratio φ ≈ 1.618424
     pattern10: Math.abs(results.goldenRatio - 1.618424) < 0.001
   }
 }
 
-// Helper functions for accurate pattern validation
-function calculatePattern3Values() {
+// Legacy function for backward compatibility
+export function validatePatterns(results: ChecksumResults): PatternValidation {
+  return validatePatternsWithTableData(results)
+}
+
+// Helper functions for accurate pattern validation (exported for component use)
+export function calculatePattern3Values() {
   let F = 0  // Chapter if total (A+B) is even
   let G = 0  // Verses if total (A+B) is odd
   
@@ -333,7 +468,7 @@ function calculatePattern3Values() {
   return { F, G }
 }
 
-function calculatePattern4Counts() {
+export function calculatePattern4Counts() {
   let H = 0  // Count: Even chapter AND even verses
   let I = 0  // Count: Even chapter AND odd verses
   let J = 0  // Count: Odd chapter AND even verses  
@@ -354,7 +489,7 @@ function calculatePattern4Counts() {
   return { H, I, J, K }
 }
 
-function calculatePattern9Values() {
+export function calculatePattern9Values() {
   let Z = 0   // Sum of prime verse counts
   let AA = 0  // Sum of nth primes for prime verse counts
   

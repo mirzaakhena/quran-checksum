@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import { QuranSurah, ChecksumResults, PatternValidation } from '../../types'
 import { quranData } from '../../data/quran'
-import { calculatePatterns, validatePatterns, isPrime, getNthPrime } from '../../utils/calculations'
+import { calculatePatterns, validatePatterns, isPrime, getNthPrime, calculateGoldenRatioDetails, isRepetitiveColumnCValue, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../utils/calculations'
 import PatternModal from './PatternModal'
 import CellTooltip from './CellTooltip'
+import GoldenRatioCard from '../pattern10/GoldenRatioCard'
 
 interface TableColumn {
   id: string
@@ -24,89 +25,21 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const [showAllRows, setShowAllRows] = useState(false)
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
-  // Calculate Pattern 3 values (F and G)
-  const pattern3Values = useMemo(() => {
-    let F = 0  // Chapter if total (A+B) is even
-    let G = 0  // Verses if total (A+B) is odd
-    
-    quranData.forEach(surah => {
-      const A = surah.number
-      const B = surah.verseCount
-      const C = A + B
-      const isCEven = C % 2 === 0
-      
-      if (isCEven) {
-        F += A  // Chapter number when total is even
-      } else {
-        G += B  // Verse count when total is odd
-      }
-    })
-    
-    return { F, G }
-  }, [])
+  // Calculate Pattern 3 values (F and G) using centralized function
+  const pattern3Values = useMemo(() => calculatePattern3Values(), [])
 
   // Calculate all patterns for the complete Quran
   const results = useMemo(() => calculatePatterns(quranData), [])
   
-  // Custom validation using actual table column counts (calculated inline to avoid dependency issues)
-  const validation = useMemo(() => {
-    const baseValidation = validatePatterns(results)
-    
-    // Calculate actual column counts for validation
-    const hCount = quranData.reduce((count, surah) => {
-      const A = surah.number
-      const B = surah.verseCount
-      const isAEven = A % 2 === 0
-      const isBEven = B % 2 === 0
-      return count + (isAEven && isBEven ? 1 : 0)
-    }, 0)
-    
-    const iCount = quranData.reduce((count, surah) => {
-      const A = surah.number
-      const B = surah.verseCount
-      const isAEven = A % 2 === 0
-      const isBEven = B % 2 === 0
-      return count + (isAEven && !isBEven ? 1 : 0)
-    }, 0)
-    
-    const jCount = quranData.reduce((count, surah) => {
-      const A = surah.number
-      const B = surah.verseCount
-      const isAEven = A % 2 === 0
-      const isBEven = B % 2 === 0
-      return count + (!isAEven && isBEven ? 1 : 0)
-    }, 0)
-    
-    const kCount = quranData.reduce((count, surah) => {
-      const A = surah.number
-      const B = surah.verseCount
-      const isAEven = A % 2 === 0
-      const isBEven = B % 2 === 0
-      return count + (!isAEven && !isBEven ? 1 : 0)
-    }, 0)
-    
-    // Calculate Z and AA totals
-    let zTotal = 0
-    let aaTotal = 0
-    quranData.forEach(surah => {
-      if (isPrime(surah.verseCount)) {
-        zTotal += surah.verseCount
-        aaTotal += getNthPrime(surah.verseCount)
-      }
-    })
-    
-    // Override validations with actual calculations
-    const pattern3Valid = pattern3Values.F === 3303 && pattern3Values.G === 3303
-    const pattern4Valid = hCount === 30 && iCount === 27 && jCount === 30 && kCount === 27
-    const pattern9Valid = (zTotal + aaTotal) === 6236
-    
-    return {
-      ...baseValidation,
-      pattern3: pattern3Valid,
-      pattern4: pattern4Valid,
-      pattern9: pattern9Valid
-    }
-  }, [results, pattern3Values])
+  // Calculate golden ratio details for Pattern 10
+  const goldenRatioDetails = useMemo(() => calculateGoldenRatioDetails(quranData), [])
+  
+  // Calculate Pattern 4 counts and Pattern 9 values using centralized functions
+  const pattern4Counts = useMemo(() => calculatePattern4Counts(), [])
+  const pattern9Values = useMemo(() => calculatePattern9Values(), [])
+  
+  // Use centralized validation function for consistency across components
+  const validation: PatternValidation = useMemo(() => validatePatterns(results), [results])
 
   // Define table columns with optimized widths
   const columns: TableColumn[] = [
@@ -246,13 +179,13 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
           <div className="bg-purple-100 p-2 rounded text-center">
             <div className="font-semibold">Pattern 4</div>
             <div className={validation.pattern4 ? 'text-green-600' : 'text-red-600'}>
-              {getColumnCount('H')}-{getColumnCount('I')}-{getColumnCount('J')}-{getColumnCount('K')} {validation.pattern4 ? '✅' : '❌'}
+              {pattern4Counts.H}-{pattern4Counts.I}-{pattern4Counts.J}-{pattern4Counts.K} {validation.pattern4 ? '✅' : '❌'}
             </div>
           </div>
           <div className="bg-green-100 p-2 rounded text-center">
             <div className="font-semibold">Pattern 9</div>
             <div className={validation.pattern9 ? 'text-green-600' : 'text-red-600'}>
-              {getColumnTotal('Z') + getColumnTotal('AA')} {validation.pattern9 ? '✅' : '❌'}
+              {pattern9Values.Z + pattern9Values.AA} {validation.pattern9 ? '✅' : '❌'}
             </div>
           </div>
           <div className="bg-pink-100 p-2 rounded text-center">
@@ -297,11 +230,16 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             {(showAllRows ? quranData : quranData.slice(0, 20)).map((surah, index) => (
               <tr key={surah.number} className="border-b hover:bg-gray-50">
                 <td className="p-1 font-medium sticky left-0 bg-white/95 z-30 border-r backdrop-blur-sm text-xs">
-                  {surah.number}
+                  {/* {surah.number} */}
                 </td>
                 {columns.map((col) => {
                   const value = getCellValue(surah, col.id)
                   const isEmpty = value === ''
+                  
+                  // Special styling for Column C (Pattern 10 - Golden Ratio)
+                  const isColumnC = col.id === 'C'
+                  const columnCValue = surah.number + surah.verseCount  // A + B
+                  const isRepetitive = isColumnC && isRepetitiveColumnCValue(columnCValue, goldenRatioDetails)
                   return (
                     <td
                       key={col.id}
@@ -310,7 +248,13 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
                         hover:bg-blue-50 active:bg-blue-100 relative text-xs
                         ${col.className}
                         ${getPatternHighlight(col.id)}
-                        ${isEmpty ? 'text-gray-300' : 'text-gray-900'}
+                        ${isEmpty ? 'text-gray-300' : (
+                          isColumnC ? (
+                            isRepetitive 
+                              ? 'text-orange-700 font-bold bg-orange-100/50 border border-orange-200' 
+                              : 'text-blue-700 font-normal bg-blue-100/30'
+                          ) : 'text-gray-900'
+                        )}
                         ${selectedCell?.row === index && selectedCell?.col === col.id ? 'ring-2 ring-blue-500' : ''}
                       `}
                       onMouseEnter={(e) => handleCellHover(index, col.id, e)}
@@ -487,6 +431,11 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             </tr>
           </tfoot>
         </table>
+      </div>
+
+      {/* Golden Ratio Pattern 10 Details Card */}
+      <div className="mt-6">
+        <GoldenRatioCard />
       </div>
 
       {/* Interactive tooltips and modals */}
