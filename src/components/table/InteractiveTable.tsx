@@ -197,13 +197,13 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
         </div>
       </div>
 
-      {/* Main Table - No Horizontal Scroll */}
-      <div className="w-full">
-        <table className="w-full text-sm table-fixed">
-          {/* Header Row - Sticky */}
-          <thead className="bg-gray-100 border-b-2 sticky top-[88px] z-40 shadow-md backdrop-blur-sm bg-gray-100/95">
+      {/* Main Table - Mobile Horizontal Scroll */}
+      <div className="w-full overflow-x-auto md:overflow-x-visible">
+        <table className="w-full text-sm table-fixed min-w-[800px] md:min-w-full">
+          {/* Header Row - Sticky on Desktop Only */}
+          <thead className="bg-gray-100 border-b-2 md:sticky md:top-[88px] md:z-40 md:shadow-md md:backdrop-blur-sm md:bg-gray-100/95">
             <tr>
-              <th className="p-1 text-left font-semibold sticky left-0 bg-gray-100/95 z-50 backdrop-blur-sm shadow-sm w-12">
+              <th className="p-1 text-left font-semibold md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm md:shadow-sm w-12">
                 #
               </th>
               {columns.map((col) => (
@@ -211,7 +211,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
                   key={col.id}
                   className={`
                     p-1 text-center font-semibold cursor-pointer transition-all duration-200
-                    hover:bg-gray-200 active:bg-gray-300 bg-gray-100/95 backdrop-blur-sm
+                    hover:bg-gray-200 active:bg-gray-300 bg-gray-100 md:bg-gray-100/95 md:backdrop-blur-sm
                     ${col.className}
                     ${getPatternHighlight(col.id)}
                   `}
@@ -229,8 +229,8 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
           <tbody>
             {(showAllRows ? quranData : quranData.slice(0, 20)).map((surah, index) => (
               <tr key={surah.number} className="border-b hover:bg-gray-50">
-                <td className="p-1 font-medium sticky left-0 bg-white/95 z-30 border-r backdrop-blur-sm text-xs">
-                  {/* {surah.number} */}
+                <td className="p-1 font-medium md:sticky md:left-0 md:bg-white/95 md:z-30 border-r md:backdrop-blur-sm text-xs md:shadow-sm">
+                  {surah.number}
                 </td>
                 {columns.map((col) => {
                   const value = getCellValue(surah, col.id)
@@ -308,7 +308,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
           <tfoot className="bg-gray-100 border-t-2">
             {/* First row: TOTAL (SUM) */}
             <tr className="font-bold">
-              <td className="p-1 sticky left-0 bg-gray-100/95 z-50 backdrop-blur-sm text-xs font-bold">
+              <td className="p-1 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
                 TOTAL
               </td>
               {columns.map((col) => {
@@ -372,7 +372,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
 
             {/* Second row: COUNT (Pattern 2: D,E distribution + Pattern 4: H,I,J,K parity counts) */}
             <tr className="font-bold border-t">
-              <td className="p-1 sticky left-0 bg-gray-100/95 z-50 backdrop-blur-sm text-xs font-bold">
+              <td className="p-1 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
                 COUNT
               </td>
               {columns.map((col) => {

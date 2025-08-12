@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import InteractiveTable from '../components/table/InteractiveTable'
+import InteractiveTable from '../components/table-refactored/components/InteractiveTable'
 import { quranData } from '../data/quran'
 import { calculatePatterns, validatePatterns } from '../utils/calculations'
 
