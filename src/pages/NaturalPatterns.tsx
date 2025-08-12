@@ -23,8 +23,8 @@ export default function NaturalPatterns() {
       {/* Pattern Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-1-even">
-          <h3 className="font-bold text-lg mb-2">Pattern 1: Perfect Balance</h3>
-          <p className="text-gray-600 mb-3">6555 vs 6236 distribution</p>
+          <h3 className="font-bold text-lg mb-2">Pattern 6555-6236 </h3>
+          <p className="text-gray-600 mb-3">perfect balance distribution</p>
           <div className="text-2xl font-bold text-pattern-1-even">
             {results.sumSurahNumbers} / {results.sumVerseCounts}
           </div>
@@ -34,8 +34,8 @@ export default function NaturalPatterns() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-1-odd">
-          <h3 className="font-bold text-lg mb-2">Pattern 2: 57:57 Distribution</h3>
-          <p className="text-gray-600 mb-3">Perfect even/odd chapter split</p>
+          <h3 className="font-bold text-lg mb-2">Pattern 57:57</h3>
+          <p className="text-gray-600 mb-3">Perfect even/odd split distribution</p>
           <div className="text-2xl font-bold text-pattern-1-odd">
             {results.evenSurahs} : {results.oddSurahs}
           </div>
@@ -45,7 +45,7 @@ export default function NaturalPatterns() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-3-highlight">
-          <h3 className="font-bold text-lg mb-2">Pattern 3: 3303 Symmetry</h3>
+          <h3 className="font-bold text-lg mb-2">Pattern 3303</h3>
           <p className="text-gray-600 mb-3">Conditional symmetry pattern</p>
           <div className="text-2xl font-bold text-pattern-3-highlight">
             {validation.pattern3 ? '3303' : 'Calculating...'}
@@ -56,8 +56,8 @@ export default function NaturalPatterns() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-4-combo1">
-          <h3 className="font-bold text-lg mb-2">Pattern 4: Parity Matrix</h3>
-          <p className="text-gray-600 mb-3">30-27-30-27 combinations</p>
+          <h3 className="font-bold text-lg mb-2">Pattern 30-27</h3>
+          <p className="text-gray-600 mb-3">Even Odd Parity Matrix combinations</p>
           <div className="text-2xl font-bold text-pattern-4-combo1">
             {results.evenSurahEvenVerses}-{results.evenSurahOddVerses}-{results.oddSurahEvenVerses}-{results.oddSurahOddVerses}
           </div>
@@ -67,7 +67,7 @@ export default function NaturalPatterns() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-9-prime">
-          <h3 className="font-bold text-lg mb-2">Pattern 9: Prime Sum</h3>
+          <h3 className="font-bold text-lg mb-2">Pattern Prime Sum</h3>
           <p className="text-gray-600 mb-3">1076+5160=6236 relationship</p>
           <div className="text-2xl font-bold text-pattern-9-prime">
             {results.primeVerses + results.nthPrimeSum}
@@ -78,7 +78,7 @@ export default function NaturalPatterns() {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-10-repetitive">
-          <h3 className="font-bold text-lg mb-2">Pattern 10: Golden Ratio</h3>
+          <h3 className="font-bold text-lg mb-2">Pattern Golden Ratio</h3>
           <p className="text-gray-600 mb-3">φ ≈ 1.618424 emergence</p>
           <div className="text-2xl font-bold text-pattern-10-repetitive">
             φ = {results.goldenRatio.toFixed(6)}

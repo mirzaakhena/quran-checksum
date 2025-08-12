@@ -167,7 +167,7 @@ export function calculatePatterns(surahs: QuranSurah[]): ChecksumResults {
     
     // Prime verse calculations
     if (isPrime(surah.verseCount)) {
-      primeVerses++
+      primeVerses += surah.verseCount
       nthPrimeSum += getNthPrime(surah.verseCount)
     }
     
@@ -176,6 +176,9 @@ export function calculatePatterns(surahs: QuranSurah[]): ChecksumResults {
     const count = columnCMap.get(columnCValue) || 0
     columnCMap.set(columnCValue, count + 1)
   })
+
+  console.log(primeVerses);
+  
   
   // Calculate repetitive vs non-repetitive sums (matching Go implementation)
   surahs.forEach((surah) => {

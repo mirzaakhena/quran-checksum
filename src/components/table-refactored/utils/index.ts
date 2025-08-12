@@ -13,7 +13,7 @@ export const createTableColumns = (): TableColumn[] => [
   { id: 'H', label: 'H', description: 'Even-Even', formula: 'IF(A even AND B even, ✓, "")', className: 'bg-pattern-4-combo1/20 w-10' },
   { id: 'I', label: 'I', description: 'Even-Odd', formula: 'IF(A even AND B odd, ✓, "")', className: 'bg-pattern-4-combo2/20 w-10' },
   { id: 'J', label: 'J', description: 'Odd-Even', formula: 'IF(A odd AND B even, ✓, "")', className: 'bg-pattern-4-combo3/20 w-10' },
-  { id: 'K', label: 'K', description: 'Odd-Odd', formula: 'IF(A odd AND B odd, ✓, "")', className: 'bg-pattern-4-combo4/20 w-10' },
+  { id: 'K', label: 'K', description: 'Odd-\nOdd', formula: 'IF(A odd AND B odd, ✓, "")', className: 'bg-pattern-4-combo4/20 w-10' },
   { id: 'Z', label: 'Z', description: 'Prime Verses', formula: 'IF(B is prime, B, "")', className: 'bg-pattern-9-prime/20 w-16' },
   { id: 'AA', label: 'AA', description: 'Nth Prime', formula: 'IF(B is prime, nth_prime(B), "")', className: 'bg-pattern-9-nth/20 w-20' }
 ]
