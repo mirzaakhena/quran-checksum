@@ -22,6 +22,7 @@ src/v2/
 5. **Type Safety**: Comprehensive TypeScript interfaces
 6. **Correct Imports**: Fixed all import paths
 7. **Cleaner Code**: Removed unused variables and functions
+8. **Removed Questionable Patterns**: Removed patterns 5, 6, 7, and 8 as requested
 
 ## Usage
 
@@ -43,11 +44,9 @@ console.log('Pattern validation results:', validation)
 ### Core Calculations
 - `calculateNaturalPatterns(surahs: QuranSurah[]): PatternResults` - Calculates all natural patterns
 - `calculateGoldenRatioDetails(surahs: QuranSurah[]): GoldenRatioDetails` - Detailed Golden Ratio analysis
-- `calculateQuestionablePatterns(surahs: QuranSurah[]): QuestionablePatternResults` - Calculates questionable patterns
 
 ### Validation
 - `validateNaturalPatterns(results: PatternResults, surahs = quranData): PatternValidation` - Validates natural patterns
-- `validateQuestionablePatterns(results: QuestionablePatternResults): QuestionablePatternValidation` - Validates questionable patterns
 
 ### Utilities
 - `isPrime(n: number): boolean` - Checks if a number is prime
@@ -66,4 +65,4 @@ All patterns validate correctly:
 - Pattern 9 (6236 prime sum): ✅ Valid
 - Pattern 10 (Golden Ratio φ): ✅ Valid
 
-The refactored code maintains full compatibility with the original functionality while providing a cleaner, more maintainable structure.
+The refactored code maintains full compatibility with the original functionality while providing a cleaner, more maintainable structure. Questionable patterns 5, 6, 7, and 8 have been removed as requested.

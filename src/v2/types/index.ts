@@ -73,39 +73,6 @@ export interface PatternValidation {
   pattern10: boolean; // φ ≈ 1.618424
 }
 
-// Questionable pattern results
-export interface QuestionablePatternResults {
-  // Pattern 5: Even verse split 27-33
-  pattern5FirstGroup: number;
-  pattern5SecondGroup: number;
-  
-  // Pattern 6: Complex symmetry with reverse order
-  pattern6Group1: number;
-  pattern6Group2: number;
-  pattern6Group3: number;
-  pattern6Group4: number;
-  pattern6Reverse1: number;
-  pattern6Reverse2: number;
-  pattern6Reverse3: number;
-  pattern6Reverse4: number;
-  
-  // Pattern 7: Prime vs non-prime verses
-  pattern7PrimeSum: number;
-  pattern7NonPrimeSum: number;
-  
-  // Pattern 8: Prime chapters vs multiples of 19
-  pattern8PrimeChaptersSum: number;
-  pattern8Multiple19Sum: number;
-}
-
-// Questionable pattern validation
-export interface QuestionablePatternValidation {
-  pattern5: boolean;
-  pattern6: boolean; 
-  pattern7: boolean;
-  pattern8: boolean;
-}
-
 // Game state for challenge mode
 export interface GameState {
   difficulty: 'beginner' | 'intermediate' | 'expert';
