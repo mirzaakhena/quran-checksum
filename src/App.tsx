@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Layout from './components/layout/Layout'
+import { Layout } from './components/layout'
 import NaturalPatterns from './pages/NaturalPatterns'
 
 function App() {
