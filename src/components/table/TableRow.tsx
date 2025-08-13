@@ -1,5 +1,5 @@
-import { TableRowProps } from '../types'
-import { getCellStyling } from '../utils'
+import { TableRowProps } from './types'
+import { getCellStyling } from './utils'
 
 export default function TableRow({
   surah,

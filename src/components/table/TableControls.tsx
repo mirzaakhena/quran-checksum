@@ -1,4 +1,4 @@
-import { TableControlsProps } from '../types'
+import { TableControlsProps } from './types'
 
 export default function TableControls({
   showAllRows,

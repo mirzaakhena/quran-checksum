@@ -1,12 +1,10 @@
-import { useMemo } from 'react'
-import InteractiveTable from '../components/table-refactored/components/InteractiveTable'
-import { quranData } from '../v2/data'
-import { calculateNaturalPatterns, validateNaturalPatterns } from '../v2/core'
+import InteractiveTable from '../components/table/InteractiveTable'
+import PatternSummaryCard from '../components/patterns/PatternSummaryCard'
+import { useQuranPatterns } from '../hooks/useQuranPatterns'
 
 export default function NaturalPatterns() {
-  // Calculate patterns for display in summary cards
-  const results = useMemo(() => calculateNaturalPatterns(quranData), [])
-  const validation = useMemo(() => validateNaturalPatterns(results), [results])
+  const { results, validation } = useQuranPatterns()
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -22,71 +20,59 @@ export default function NaturalPatterns() {
 
       {/* Pattern Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-1-even">
-          <h3 className="font-bold text-lg mb-2">Pattern 6555-6236 </h3>
-          <p className="text-gray-600 mb-3">perfect balance distribution</p>
-          <div className="text-2xl font-bold text-pattern-1-even">
-            {results.sumSurahNumbers} / {results.sumVerseCounts}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern1 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern 6555-6236"
+          formula="perfect balance distribution"
+          value={`${results.sumSurahNumbers} / ${results.sumVerseCounts}`}
+          expected="6555 / 6236"
+          isValid={validation.pattern1}
+          className="border-l-4 border-pattern-1-even"
+        />
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-1-odd">
-          <h3 className="font-bold text-lg mb-2">Pattern 57:57</h3>
-          <p className="text-gray-600 mb-3">Perfect even/odd split distribution</p>
-          <div className="text-2xl font-bold text-pattern-1-odd">
-            {results.evenSurahs} : {results.oddSurahs}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern2 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern 57:57"
+          formula="Perfect even/odd split distribution"
+          value={`${results.evenSurahs} : ${results.oddSurahs}`}
+          expected="57 : 57"
+          isValid={validation.pattern2}
+          className="border-l-4 border-pattern-1-odd"
+        />
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-3-highlight">
-          <h3 className="font-bold text-lg mb-2">Pattern 3303</h3>
-          <p className="text-gray-600 mb-3">Conditional symmetry pattern</p>
-          <div className="text-2xl font-bold text-pattern-3-highlight">
-            {validation.pattern3 ? '3303' : 'Calculating...'}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern3 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern 3303"
+          formula="Conditional symmetry pattern"
+          value={validation.pattern3 ? '3303' : 'Calculating...'}
+          expected="3303"
+          isValid={validation.pattern3}
+          className="border-l-4 border-pattern-3-highlight"
+        />
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-4-combo1">
-          <h3 className="font-bold text-lg mb-2">Pattern 30-27</h3>
-          <p className="text-gray-600 mb-3">Even Odd Parity Matrix combinations</p>
-          <div className="text-2xl font-bold text-pattern-4-combo1">
-            {results.evenSurahEvenVerses}-{results.evenSurahOddVerses}-{results.oddSurahEvenVerses}-{results.oddSurahOddVerses}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern4 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern 30-27"
+          formula="Even Odd Parity Matrix combinations"
+          value={`${results.evenSurahEvenVerses}-${results.evenSurahOddVerses}-${results.oddSurahEvenVerses}-${results.oddSurahOddVerses}`}
+          expected="30-27-27-30"
+          isValid={validation.pattern4}
+          className="border-l-4 border-pattern-4-combo1"
+        />
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-9-prime">
-          <h3 className="font-bold text-lg mb-2">Pattern Prime Sum</h3>
-          <p className="text-gray-600 mb-3">1076+5160=6236 relationship</p>
-          <div className="text-2xl font-bold text-pattern-9-prime">
-            {results.primeVersesSum + results.nthPrimeSum}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern9 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern Prime Sum"
+          formula="1076+5160=6236 relationship"
+          value={results.primeVersesSum + results.nthPrimeSum}
+          expected="6236"
+          isValid={validation.pattern9}
+          className="border-l-4 border-pattern-9-prime"
+        />
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pattern-10-repetitive">
-          <h3 className="font-bold text-lg mb-2">Pattern Golden Ratio</h3>
-          <p className="text-gray-600 mb-3">φ ≈ 1.618424 emergence</p>
-          <div className="text-2xl font-bold text-pattern-10-repetitive">
-            φ = {results.goldenRatio.toFixed(6)}
-          </div>
-          <div className="text-sm mt-1">
-            {validation.pattern10 ? '✅ Validated' : '❌ Not Matched'}
-          </div>
-        </div>
+        <PatternSummaryCard
+          title="Pattern Golden Ratio"
+          formula="φ ≈ 1.618424 emergence"
+          value={`φ = ${results.goldenRatio.toFixed(6)}`}
+          expected="1.618424"
+          isValid={validation.pattern10}
+          className="border-l-4 border-pattern-10-repetitive"
+        />
       </div>
 
       {/* Main Interactive Table Area */}

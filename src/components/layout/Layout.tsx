@@ -14,12 +14,6 @@ export default function Layout({ children }: LayoutProps) {
       label: 'Natural Patterns', 
       description: 'Primary Focus - Bulletproof Patterns',
       status: '🟢'
-    },
-    { 
-      path: '/challenge-game', 
-      label: 'Challenge Game', 
-      description: 'Random Creation Challenge',
-      status: '🎮'
     }
   ]
 

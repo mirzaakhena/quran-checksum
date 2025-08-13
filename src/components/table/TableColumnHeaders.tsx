@@ -1,4 +1,4 @@
-import { TableColumnHeadersProps } from '../types'
+import { TableColumnHeadersProps } from './types'
 
 export default function TableColumnHeaders({
   columns,

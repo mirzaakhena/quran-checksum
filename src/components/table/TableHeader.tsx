@@ -1,4 +1,4 @@
-import { TableHeaderProps } from '../types'
+import { TableHeaderProps } from './types'
 
 export default function TableHeader({
   validation,

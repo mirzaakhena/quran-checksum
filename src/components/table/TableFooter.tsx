@@ -1,4 +1,4 @@
-import { TableFooterProps } from '../types'
+import { TableFooterProps } from './types'
 
 export default function TableFooter({
   columns,
