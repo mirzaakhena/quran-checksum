@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import InteractiveTable from '../components/table-refactored/components/InteractiveTable'
-import { quranData } from '../data/quran'
-import { calculatePatterns, validatePatterns } from '../utils/calculations'
+import { quranData } from '../v2/data'
+import { calculateNaturalPatterns, validateNaturalPatterns } from '../v2/core'
 
 export default function NaturalPatterns() {
   // Calculate patterns for display in summary cards
-  const results = useMemo(() => calculatePatterns(quranData), [])
-  const validation = useMemo(() => validatePatterns(results), [results])
+  const results = useMemo(() => calculateNaturalPatterns(quranData), [])
+  const validation = useMemo(() => validateNaturalPatterns(results), [results])
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -70,7 +70,7 @@ export default function NaturalPatterns() {
           <h3 className="font-bold text-lg mb-2">Pattern Prime Sum</h3>
           <p className="text-gray-600 mb-3">1076+5160=6236 relationship</p>
           <div className="text-2xl font-bold text-pattern-9-prime">
-            {results.primeVerses + results.nthPrimeSum}
+            {results.primeVersesSum + results.nthPrimeSum}
           </div>
           <div className="text-sm mt-1">
             {validation.pattern9 ? '✅ Validated' : '❌ Not Matched'}

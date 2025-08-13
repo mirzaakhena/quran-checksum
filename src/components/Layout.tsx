@@ -16,12 +16,6 @@ export default function Layout({ children }: LayoutProps) {
       status: '🟢'
     },
     { 
-      path: '/questionable-patterns', 
-      label: 'Questionable Patterns', 
-      description: 'Academic Analysis - Risk Assessment',
-      status: '🟡'
-    },
-    { 
       path: '/challenge-game', 
       label: 'Challenge Game', 
       description: 'Random Creation Challenge',

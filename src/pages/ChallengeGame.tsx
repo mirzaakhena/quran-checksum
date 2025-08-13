@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
-import { QuranSurah } from '../types'
-import { calculatePatterns, validatePatterns } from '../utils/calculations'
-import { quranData } from '../data/quran'
+import { quranData } from '../v2/data'
+import { QuranSurah } from '../v2/types'
+import { calculateNaturalPatterns, validateNaturalPatterns } from '../v2/core'
 
 interface GameState {
   surahCount: number
@@ -44,8 +44,8 @@ export default function ChallengeGame() {
   }, [gameState.surahCount, gameState.verseCounts])
 
   // Calculate patterns for current game data
-  const gameResults = useMemo(() => calculatePatterns(gameData), [gameData])
-  const gameValidation = useMemo(() => validatePatterns(gameResults), [gameResults])
+  const gameResults = useMemo(() => calculateNaturalPatterns(gameData), [gameData])
+  const gameValidation = useMemo(() => validateNaturalPatterns(gameResults), [gameResults])
 
   // Expected values based on surah count
   const expectedValues = useMemo(() => {
