@@ -1,5 +1,5 @@
-import { QuranSurah } from '../../types'
-import { isPrime, getNthPrime } from '../../utils/calculations'
+import { QuranSurah } from '../../v2/types'
+import { isPrime, getNthPrime } from '../../v2/utils/math'
 import { useState, useEffect } from 'react'
 
 interface CellTooltipProps {

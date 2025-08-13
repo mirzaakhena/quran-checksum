@@ -1,8 +1,8 @@
-import { ChecksumResults, PatternValidation } from '../../types'
+import { PatternResults, PatternValidation } from '../../v2/types'
 
 interface PatternModalProps {
   patternId: string
-  results: ChecksumResults
+  results: PatternResults
   validation: PatternValidation
   onClose: () => void
 }
@@ -62,7 +62,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           title: 'Pattern 9: Prime Sum Z+AA=6236',
           description: 'Sum of prime verse counts plus sum of corresponding nth primes equals total verses',
           formula: 'Σ(Prime Verses) + Σ(nth_prime(surah_number)) = Total Verses',
-          currentValue: `${results.primeVerses} + ${results.nthPrimeSum} = ${results.primeVerses + results.nthPrimeSum}`,
+          currentValue: `${results.primeVersesSum} + ${results.nthPrimeSum} = ${results.primeVersesSum + results.nthPrimeSum}`,
           expectedValue: '6236',
           isValid: validation.pattern9,
           explanation: 'This connects prime numbers in verse counts with positional prime sequences, creating a relationship between content structure and mathematical sequences.',

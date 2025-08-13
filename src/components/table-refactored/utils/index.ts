@@ -1,5 +1,5 @@
-import { QuranSurah } from '../../../types'
-import { isPrime, getNthPrime, isRepetitiveColumnCValue } from '../../../utils/calculations'
+import { QuranSurah } from '../../../v2/types'
+import { isPrime, getNthPrime } from '../../../v2/utils/math'
 import { TableColumn } from '../types'
 
 export const createTableColumns = (): TableColumn[] => [
@@ -105,7 +105,9 @@ export const getCellStyling = (
   const isEmpty = value === ''
   const isColumnC = columnId === 'C'
   const columnCValue = surah.number + surah.verseCount
-  const isRepetitive = isColumnC && isRepetitiveColumnCValue(columnCValue, goldenRatioDetails)
+  const isRepetitive = isColumnC && goldenRatioDetails && 
+    goldenRatioDetails.repetitiveValues && 
+    goldenRatioDetails.repetitiveValues.includes(columnCValue)
   
   return `
     p-1 text-center cursor-pointer transition-all duration-200

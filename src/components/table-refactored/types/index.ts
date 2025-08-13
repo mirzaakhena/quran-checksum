@@ -1,4 +1,4 @@
-import { QuranSurah, PatternValidation } from '../../../types'
+import { QuranSurah, PatternValidation } from '../../../v2/types'
 
 export interface TableColumn {
   id: string

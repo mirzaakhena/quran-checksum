@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import { PatternValidation } from '../../../types'
-import { quranData } from '../../../data/quran'
-import { calculatePatterns, validatePatterns, calculateGoldenRatioDetails, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../../utils/calculations'
+import { PatternValidation } from '../../../v2/types'
+import { quranData } from '../../../v2/data'
+import { calculateNaturalPatterns, validateNaturalPatterns, calculateGoldenRatioDetails, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../../v2/core'
 import PatternModal from '../../table/PatternModal'
 import CellTooltip from '../../table/CellTooltip'
 import GoldenRatioCard from '../../pattern10/GoldenRatioCard'
@@ -25,12 +25,8 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   })
 
   const columns = useMemo(() => createTableColumns(), [])
-  const pattern3Values = useMemo(() => calculatePattern3Values(), [])
-  const results = useMemo(() => calculatePatterns(quranData), [])
-  const goldenRatioDetails = useMemo(() => calculateGoldenRatioDetails(quranData), [])
-  const pattern4Counts = useMemo(() => calculatePattern4Counts(), [])
-  const pattern9Values = useMemo(() => calculatePattern9Values(), [])
-  const validation: PatternValidation = useMemo(() => validatePatterns(results), [results])
+  const results = useMemo(() => calculateNaturalPatterns(quranData), [])
+  const validation: PatternValidation = useMemo(() => validateNaturalPatterns(results), [results])
 
   const wrappedGetColumnTotal = (columnId: string) => getColumnTotal(quranData, columnId)
   const wrappedGetColumnCount = (columnId: string) => getColumnCount(quranData, columnId)
@@ -84,9 +80,9 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
       <TableHeader
         validation={validation}
         results={results}
-        pattern3Values={pattern3Values}
-        pattern4Counts={pattern4Counts}
-        pattern9Values={pattern9Values}
+        pattern3Values={calculatePattern3Values(quranData)}
+        pattern4Counts={calculatePattern4Counts(quranData)}
+        pattern9Values={calculatePattern9Values(quranData)}
         getColumnCount={wrappedGetColumnCount}
       />
 
@@ -109,7 +105,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
                 selectedPattern={tableState.selectedPattern}
                 getCellValue={getCellValue}
                 getPatternHighlight={wrappedGetPatternHighlight}
-                goldenRatioDetails={goldenRatioDetails}
+                goldenRatioDetails={calculateGoldenRatioDetails([surah])}
                 onCellHover={handleCellHover}
                 onCellClick={handleCellClick}
                 onMouseMove={handleMouseMove}

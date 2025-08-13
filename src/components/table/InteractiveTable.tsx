@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react'
-import { QuranSurah, PatternValidation } from '../../types'
-import { quranData } from '../../data/quran'
-import { calculatePatterns, validatePatterns, isPrime, getNthPrime, calculateGoldenRatioDetails, isRepetitiveColumnCValue, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../utils/calculations'
+  import { useState, useMemo } from 'react'
+import { QuranSurah, PatternValidation } from '../../v2/types'
+import { quranData } from '../../v2/data'
+import { calculateNaturalPatterns, validateNaturalPatterns, calculateGoldenRatioDetails, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../v2/core'
+import { isPrime, getNthPrime } from '../../v2/utils/math'
 import PatternModal from './PatternModal'
 import CellTooltip from './CellTooltip'
 import GoldenRatioCard from '../pattern10/GoldenRatioCard'
@@ -26,20 +27,26 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
   // Calculate Pattern 3 values (F and G) using centralized function
-  const pattern3Values = useMemo(() => calculatePattern3Values(), [])
+  const pattern3Values = useMemo(() => calculatePattern3Values(quranData), [])
 
   // Calculate all patterns for the complete Quran
-  const results = useMemo(() => calculatePatterns(quranData), [])
+  const results = useMemo(() => calculateNaturalPatterns(quranData), [])
   
   // Calculate golden ratio details for Pattern 10
   const goldenRatioDetails = useMemo(() => calculateGoldenRatioDetails(quranData), [])
   
-  // Calculate Pattern 4 counts and Pattern 9 values using centralized functions
-  const pattern4Counts = useMemo(() => calculatePattern4Counts(), [])
-  const pattern9Values = useMemo(() => calculatePattern9Values(), [])
+  // Calculate Pattern 3 counts and Pattern 4 counts using centralized functions
+  const pattern3Values = useMemo(() => calculatePattern3Values(quranData), [])
+  const pattern4Counts = useMemo(() => calculatePattern4Counts(quranData), [])
   
   // Use centralized validation function for consistency across components
-  const validation: PatternValidation = useMemo(() => validatePatterns(results), [results])
+  const validation: PatternValidation = useMemo(() => validateNaturalPatterns(results), [results])
+
+  // Helper function to check if a Column C value (A+B) is repetitive
+  const isRepetitiveColumnCValue = (columnCValue: number): boolean => {
+    if (!goldenRatioDetails) return false
+    return goldenRatioDetails.repetitiveValues.includes(columnCValue)
+  }
 
   // Define table columns with optimized widths
   const columns: TableColumn[] = [
@@ -157,44 +164,39 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
 
       {/* Pattern Summary Bar - Sticky */}
       <div className="bg-gray-50 p-3 border-b sticky top-0 z-50 shadow-md backdrop-blur-sm bg-gray-50/95">
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-2 text-xs">
-          <div className="bg-blue-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 1</div>
-            <div className={validation.pattern1 ? 'text-green-600' : 'text-red-600'}>
-              {results.sumSurahNumbers}/{results.sumVerseCounts} {validation.pattern1 ? '✅' : '❌'}
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-center">
+          <div className={`p-2 rounded border ${validation.pattern1 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 1</div>
+            <div className="text-xs">{results.sumSurahNumbers}/{results.sumVerseCounts}</div>
+            <div className="text-xs text-gray-600">6555/6236</div>
           </div>
-          <div className="bg-cyan-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 2</div>
-            <div className={validation.pattern2 ? 'text-cyan-600' : 'text-red-600'}>
-              {getColumnCount('D')}:{getColumnCount('E')} {validation.pattern2 ? '✅' : '❌'}
-            </div>
+          <div className={`p-2 rounded border ${validation.pattern2 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 2</div>
+            <div className="text-xs">{results.evenSurahs}:{results.oddSurahs}</div>
+            <div className="text-xs text-gray-600">57:57</div>
           </div>
-          <div className="bg-yellow-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 3</div>
-            <div className={validation.pattern3 ? 'text-green-600' : 'text-red-600'}>
-              {pattern3Values.F === pattern3Values.G ? pattern3Values.F : `${pattern3Values.F}/${pattern3Values.G}`} {validation.pattern3 ? '✅' : '❌'}
-            </div>
+          <div className={`p-2 rounded border ${validation.pattern3 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 3</div>
+            <div className="text-xs">{pattern3Values.F}/{pattern3Values.G}</div>
+            <div className="text-xs text-gray-600">3303/3303</div>
           </div>
-          <div className="bg-purple-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 4</div>
-            <div className={validation.pattern4 ? 'text-green-600' : 'text-red-600'}>
-              {pattern4Counts.H}-{pattern4Counts.I}-{pattern4Counts.J}-{pattern4Counts.K} {validation.pattern4 ? '✅' : '❌'}
-            </div>
+          <div className={`p-2 rounded border ${validation.pattern4 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 4</div>
+            <div className="text-xs">{pattern4Counts.H}-{pattern4Counts.I}-{pattern4Counts.J}-{pattern4Counts.K}</div>
+            <div className="text-xs text-gray-600">30-27-27-30</div>
           </div>
-          <div className="bg-green-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 9</div>
-            <div className={validation.pattern9 ? 'text-green-600' : 'text-red-600'}>
-              {pattern9Values.Z + pattern9Values.AA} {validation.pattern9 ? '✅' : '❌'}
-            </div>
+          <div className={`p-2 rounded border ${validation.pattern9 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 9</div>
+            <div className="text-xs">{results.primeVersesSum + results.nthPrimeSum}</div>
+            <div className="text-xs text-gray-600">6236</div>
           </div>
-          <div className="bg-pink-100 p-2 rounded text-center">
-            <div className="font-semibold">Pattern 10</div>
-            <div className={validation.pattern10 ? 'text-green-600' : 'text-red-600'}>
-              φ={results.goldenRatio.toFixed(6)} {validation.pattern10 ? '✅' : '❌'}
-            </div>
+          <div className={`p-2 rounded border ${validation.pattern10 ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'}`}>
+            <div className="font-bold text-sm">Pattern 10</div>
+            <div className="text-xs">φ = {results.goldenRatio.toFixed(6)}</div>
+            <div className="text-xs text-gray-600">1.618424</div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Main Table - Mobile Horizontal Scroll */}

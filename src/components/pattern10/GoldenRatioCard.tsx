@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { calculateGoldenRatioDetails } from '../../utils/calculations'
-import { quranData } from '../../data/quran'
+import { calculateGoldenRatioDetails } from '../../v2/core/calculations'
+import { quranData } from '../../v2/data'
 
 interface GoldenRatioCardProps {
   className?: string
