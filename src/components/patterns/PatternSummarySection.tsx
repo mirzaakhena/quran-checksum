@@ -50,9 +50,9 @@ export function PatternSummarySection({ results, validation }: PatternSummarySec
     },
     {
       title: "Pattern Golden Ratio",
-      formula: "φ ≈ 1.618424 emergence",
+      formula: "φ ≈ 1.618 emergence",
       value: `φ = ${results.goldenRatio.toFixed(6)}`,
-      expected: "1.618424",
+      expected: "1.618034",
       isValid: validation.pattern10,
       className: "border-l-4 border-pattern-10-repetitive"
     }
