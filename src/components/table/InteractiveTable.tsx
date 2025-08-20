@@ -22,6 +22,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const columns = useMemo(() => createTableColumns(), [])
   const results = useMemo(() => calculateNaturalPatterns(quranData), [])
   const validation: PatternValidation = useMemo(() => validateNaturalPatterns(results), [results])
+  const goldenRatioDetails = useMemo(() => calculateGoldenRatioDetails(quranData), [])
 
   const wrappedGetColumnTotal = (columnId: string) => getColumnTotal(quranData, columnId)
   const wrappedGetColumnCount = (columnId: string) => getColumnCount(quranData, columnId)
@@ -59,7 +60,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
                 selectedPattern={tableState.selectedPattern}
                 getCellValue={getCellValue}
                 getPatternHighlight={wrappedGetPatternHighlight}
-                goldenRatioDetails={calculateGoldenRatioDetails([surah])}
+                goldenRatioDetails={goldenRatioDetails}
                 onCellHover={handleCellHover}
                 onCellClick={handleCellClick}
                 onMouseMove={handleMouseMove}

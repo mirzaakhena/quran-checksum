@@ -117,8 +117,8 @@ export const getCellStyling = (
     ${isEmpty ? 'text-gray-300' : (
       isColumnC ? (
         isRepetitive 
-          ? 'text-orange-700 font-bold bg-orange-100/50 border border-orange-200' 
-          : 'text-blue-700 font-normal bg-blue-100/30'
+          ? 'text-orange-700 font-bold bg-orange-100/70 border border-orange-300' 
+          : 'text-blue-700 font-normal bg-blue-100/50 border border-blue-200'
       ) : 'text-gray-900'
     )}
     ${selectedCell?.row === index && selectedCell?.col === columnId ? 'ring-2 ring-blue-500' : ''}
