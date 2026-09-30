@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   MiniQuranGame,
-  RevelationMode,
   isComplete,
   revealSurah,
   scoreMiniQuran,
@@ -10,7 +9,8 @@ import {
 } from '../v2/core';
 import { quranData } from '../v2/data';
 
-const GAME_KEY = 'mini-quran-game-v1';
+// v2: the layout without revelation-order modes; older saved games are ignored
+const GAME_KEY = 'mini-quran-game-v2';
 const STATS_KEY = 'mini-quran-stats-v1';
 
 export interface MiniQuranStats {
@@ -73,8 +73,8 @@ export function useMiniQuranGame() {
     save(STATS_KEY, next);
   };
 
-  const start = (surahCount: number, mode: RevelationMode) => {
-    updateGame(startGame(surahCount, mode));
+  const start = (surahCount: number) => {
+    updateGame(startGame(surahCount));
     updateStats({ ...stats, started: stats.started + 1 });
   };
 
@@ -92,8 +92,18 @@ export function useMiniQuranGame() {
     }
   };
 
+  // Fills a book with the Quran's own verse counts to show a book where every pattern holds.
+  // Not counted in the stats: it is a reference, not an attempt.
+  const fillWithQuran = () => {
+    const book = quranData.reduce(
+      (g, surah) => revealSurah(g, surah.number, surah.verseCount),
+      startGame(quranData.length)
+    );
+    updateGame(book);
+  };
+
   // Leaves the current book (finished or not) and returns to the setup screen
   const reset = () => updateGame(null);
 
-  return { game, stats, start, reveal, reset };
+  return { game, stats, start, reveal, fillWithQuran, reset };
 }

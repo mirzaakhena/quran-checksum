@@ -13,7 +13,7 @@ interface Comparison {
 }
 
 function downloadCsv(game: MiniQuranGame) {
-  const header = 'Surah Number (A),Verse Count (B),A + B,Revealed as #';
+  const header = 'Surah Number (A),Verse Count (B),A + B,Written as #';
   const rows = game.verseCounts.map((verses, i) => {
     const surah = i + 1;
     return [surah, verses, surah + (verses ?? 0), game.revealed.indexOf(surah) + 1].join(',');
@@ -76,12 +76,12 @@ export function ResultPanel({ game, onRestart }: ResultPanelProps) {
       <section className="bg-white rounded-lg shadow-md p-5">
         <h2 className="text-2xl font-bold text-gray-900">
           {copied
-            ? 'That is the Quran itself'
+            ? 'The Quran: all 4 patterns hold'
             : passed === 4 ? 'All 4 patterns hold' : `${passed} of 4 patterns hold`}
         </h2>
         <p className="text-gray-600 mt-2">
           {copied
-            ? 'Your verse counts are exactly those of the Quran, so every pattern holds. Copying does not count: try building your own.'
+            ? 'These are the Quran\'s own verse counts, so every pattern holds. Now try writing a book of your own: copying the Quran does not count as a success.'
             : `Your book has ${game.surahCount} surahs and ${r.sumVerseCounts} verses. Patterns 1 and 3 are one fact (Sum Balance) and Patterns 2 and 4 are another (Parity Balance), so they hold or fail in pairs.`}
         </p>
       </section>
@@ -110,16 +110,34 @@ export function ResultPanel({ game, onRestart }: ResultPanelProps) {
         ))}
       </div>
 
-      <section className="bg-white rounded-lg shadow-md p-5">
-        <h2 className="font-semibold text-gray-900">Your book</h2>
-        <div className="grid grid-cols-6 sm:grid-cols-10 lg:grid-cols-12 gap-1.5 mt-3">
-          {game.verseCounts.map((count, i) => (
-            <div key={i} className="rounded-md border border-gray-200 bg-gray-50 text-center py-1">
-              <div className="text-[10px] text-gray-500 leading-none">{i + 1}</div>
-              <div className="text-sm font-semibold tabular-nums text-gray-900">{count}</div>
-            </div>
-          ))}
-        </div>
+      <section className="bg-white rounded-lg shadow-md overflow-hidden">
+        <h2 className="font-semibold text-gray-900 px-4 pt-4 pb-2">{copied ? 'The book' : 'Your book'}</h2>
+        <table className="w-full text-sm">
+          <thead className="bg-gray-100 border-y">
+            <tr>
+              <th className="text-left font-semibold px-4 py-2">Surah (A)</th>
+              <th className="text-left font-semibold px-4 py-2">Verses (B)</th>
+              <th className="text-left font-semibold px-4 py-2">A + B</th>
+              {!copied && <th className="text-left font-semibold px-4 py-2">Written as #</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {game.verseCounts.map((count, i) => {
+              const surah = i + 1;
+              const total = surah + (count ?? 0);
+              return (
+                <tr key={surah} className="border-b last:border-b-0">
+                  <td className="px-4 py-1.5 tabular-nums text-gray-700">{surah}</td>
+                  <td className="px-4 py-1.5 tabular-nums font-semibold text-gray-900">{count}</td>
+                  <td className="px-4 py-1.5 tabular-nums text-gray-700">
+                    {total} <span className="text-xs text-gray-500">{total % 2 === 0 ? 'even' : 'odd'}</span>
+                  </td>
+                  {!copied && <td className="px-4 py-1.5 tabular-nums text-gray-500">{game.revealed.indexOf(surah) + 1}</td>}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </section>
 
       <div className="flex flex-wrap gap-3">
