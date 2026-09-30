@@ -1,4 +1,4 @@
-import { QuranSurah, PatternResults, PatternValidation } from '../../../v2/types'
+import { QuranSurah } from '../../../v2/types'
 
 export interface TableColumn {
   id: string
@@ -18,11 +18,6 @@ export interface TableState {
   selectedCell: { row: number; col: string } | null
   showAllRows: boolean
   mousePosition: { x: number; y: number }
-}
-
-export interface TableHeaderProps {
-  validation: PatternValidation
-  results: PatternResults
 }
 
 export interface TableColumnHeadersProps {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { PatternResults, PatternValidation } from '../../v2/types'
 import { CORE_FACTS, EXPECTED, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core'
 
@@ -107,9 +108,20 @@ export default function PatternModal({ patternId, results, validation, onClose }
 
   const patternInfo = getPatternInfo()
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onClose])
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div
+        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="bg-gradient-to-r from-quran-blue to-indigo-600 text-white p-6 rounded-t-lg">
           <div className="flex justify-between items-start">
@@ -129,44 +141,14 @@ export default function PatternModal({ patternId, results, validation, onClose }
 
         {/* Content */}
         <div className="p-6">
-          {/* Current vs Expected */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-700 mb-2">Current Value</h4>
-              <div className="text-2xl font-bold text-gray-900">{patternInfo.currentValue}</div>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-700 mb-2">Expected Value</h4>
-              <div className="text-2xl font-bold text-gray-900">{patternInfo.expectedValue}</div>
-            </div>
-          </div>
-
-          {/* Validation Status */}
-          <div className={`p-4 rounded-lg mb-6 ${
-            patternInfo.isValid 
-              ? 'bg-green-50 border border-green-200' 
-              : 'bg-red-50 border border-red-200'
-          }`}>
-            <div className="flex items-center">
-              <span className="text-2xl mr-3">
-                {patternInfo.isValid ? '✅' : '❌'}
-              </span>
-              <div>
-                <h4 className={`font-semibold ${
-                  patternInfo.isValid ? 'text-green-800' : 'text-red-800'
-                }`}>
-                  {patternInfo.isValid ? 'Pattern Validated!' : 'Pattern Not Matched'}
-                </h4>
-                <p className={`text-sm ${
-                  patternInfo.isValid ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {patternInfo.isValid 
-                    ? 'This pattern matches the expected mathematical relationship'
-                    : 'This pattern does not match the expected values'
-                  }
-                </p>
-              </div>
-            </div>
+          {/* Value and status */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="text-3xl font-bold text-gray-900 tabular-nums">{patternInfo.currentValue}</div>
+            <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${
+              patternInfo.isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            }`}>
+              {patternInfo.isValid ? '✓ Holds' : `✗ Expected ${patternInfo.expectedValue}`}
+            </span>
           </div>
 
           {/* Formula */}
@@ -178,20 +160,10 @@ export default function PatternModal({ patternId, results, validation, onClose }
           </div>
 
           {/* Explanation */}
-          <div className="mb-6">
+          <div>
             <h4 className="font-semibold text-gray-700 mb-2">Explanation</h4>
             <p className="text-gray-600 leading-relaxed">{patternInfo.explanation}</p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 rounded-b-lg flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-quran-blue text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>

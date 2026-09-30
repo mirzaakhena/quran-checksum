@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
-import { PatternValidation } from '../../v2/types'
 import { quranData } from '../../v2/data'
-import { calculateNaturalPatterns, validateNaturalPatterns } from '../../v2/core'
 import PatternModal from '../modals/PatternModal'
 import CellTooltip from '../modals/CellTooltip'
 import { useTableState } from '../../hooks/useTableState'
+import { useQuranPatterns } from '../../hooks/useQuranPatterns'
 
 import TableHeader from './TableHeader'
 import TableColumnHeaders from './TableColumnHeaders'
@@ -19,8 +18,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const { tableState, handleHeaderClick, handleCellHover, handleCellClick, handleMouseMove, handleMouseLeave, handleToggleRows, handlePatternSelect } = useTableState();
 
   const columns = useMemo(() => createTableColumns(), [])
-  const results = useMemo(() => calculateNaturalPatterns(quranData), [])
-  const validation: PatternValidation = useMemo(() => validateNaturalPatterns(results), [results])
+  const { results, validation } = useQuranPatterns()
 
   const wrappedGetColumnTotal = (columnId: string) => getColumnTotal(quranData, columnId)
   const wrappedGetColumnCount = (columnId: string) => getColumnCount(quranData, columnId)
@@ -30,10 +28,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
 
   return (
     <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
-      <TableHeader
-        validation={validation}
-        results={results}
-      />
+      <TableHeader />
 
       <div className="w-full overflow-x-auto md:overflow-x-visible">
         <table className="w-full text-sm table-fixed min-w-[800px] md:min-w-full">
@@ -83,7 +78,6 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
 
       {tableState.hoveredCell && (
         <CellTooltip
-          row={tableState.hoveredCell.row}
           column={tableState.hoveredCell.col}
           surah={quranData[tableState.hoveredCell.row]}
           value={getCellValue(quranData[tableState.hoveredCell.row], tableState.hoveredCell.col)}

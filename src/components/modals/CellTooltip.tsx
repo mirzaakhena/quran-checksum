@@ -2,7 +2,6 @@ import { QuranSurah } from '../../v2/types'
 import { useState, useEffect } from 'react'
 
 interface CellTooltipProps {
-  row: number
   column: string
   surah: QuranSurah
   value: number | string
@@ -10,7 +9,7 @@ interface CellTooltipProps {
   mousePosition: { x: number; y: number }
 }
 
-export default function CellTooltip({ row, column, surah, value, formula, mousePosition }: CellTooltipProps) {
+export default function CellTooltip({ column, surah, value, formula, mousePosition }: CellTooltipProps) {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0, placement: 'bottom-right' })
 
   // Calculate optimal tooltip position
@@ -177,11 +176,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
         backdrop-blur-sm bg-white/95
         ${getColorClass()}
       `}>
-        {/* Placement indicator */}
-        <div className="absolute -top-1 -left-1 w-2 h-2 bg-gray-400 rounded-full opacity-50 text-xs" 
-             title={`Positioned: ${tooltipPosition.placement}`}>
-        </div>
-
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <div className="font-bold text-gray-900">
@@ -189,14 +183,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
           </div>
           <div className="text-sm text-gray-600">
             Column {column}
-          </div>
-        </div>
-
-        {/* Current Value */}
-        <div className="mb-2">
-          <div className="text-sm text-gray-600">Current Value:</div>
-          <div className="text-lg font-bold text-gray-900">
-            {value === '' || value === '—' ? 'Empty' : value}
           </div>
         </div>
 
@@ -221,10 +207,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
           {getPatternContext()}
         </div>
 
-        {/* Position indicator */}
-        <div className="text-xs text-gray-500 mt-1">
-          Row {row + 1} of 114 • Click for details
-        </div>
       </div>
     </div>
   )

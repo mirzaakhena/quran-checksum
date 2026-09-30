@@ -15,8 +15,8 @@ export default function TableRow({
 }: TableRowProps) {
   return (
     <tr key={surah.number} className="border-b hover:bg-gray-50">
-      <td className="p-1 font-medium md:sticky md:left-0 md:bg-white/95 md:z-30 border-r md:backdrop-blur-sm text-xs md:shadow-sm">
-        
+      <td className="p-1 pl-2 truncate text-gray-700 md:sticky md:left-0 md:bg-white/95 md:z-30 border-r md:backdrop-blur-sm text-xs md:shadow-sm">
+        {surah.name}
       </td>
       {columns.map((col) => {
         const value = getCellValue(surah, col.id)

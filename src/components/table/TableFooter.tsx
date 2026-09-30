@@ -49,7 +49,7 @@ export default function TableFooter({
     <tfoot className="bg-gray-100 border-t-2">
       {/* First row: TOTAL (SUM) */}
       <tr className="font-bold">
-        <td className="p-1 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
+        <td className="p-1 pl-2 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
           TOTAL
         </td>
         {columns.map((col) => {
@@ -88,7 +88,7 @@ export default function TableFooter({
 
       {/* Second row: COUNT */}
       <tr className="font-bold border-t">
-        <td className="p-1 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
+        <td className="p-1 pl-2 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
           COUNT
         </td>
         {columns.map((col) => {
