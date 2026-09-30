@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TableState } from '../components/table/types';
+import { getPatternFromColumnId } from '../components/table/utils';
 
 export function useTableState() {
   const [tableState, setTableState] = useState<TableState>({
@@ -11,9 +12,10 @@ export function useTableState() {
   });
 
   const handleHeaderClick = (columnId: string) => {
-    // This would need to be implemented based on the pattern mapping logic
-    // For now, we'll keep it simple
-    setTableState(prev => ({ ...prev, selectedPattern: columnId }));
+    const pattern = getPatternFromColumnId(columnId);
+    if (pattern) {
+      setTableState(prev => ({ ...prev, selectedPattern: pattern }));
+    }
   };
 
   const handleCellHover = (row: number, col: string, event: React.MouseEvent) => {

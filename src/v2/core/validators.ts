@@ -1,84 +1,113 @@
 // Pattern validation functions
 import { PatternResults, PatternValidation } from '../types'
-import { calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from './calculations'
-import { quranData } from '../data'
+
+// Expected values for every pattern - the single source of truth for validators and UI
+export const EXPECTED = {
+  sumSurahNumbers: 6555,
+  sumVerseCounts: 6236,
+  pattern1: { evenTotalSum: 6236, oddTotalSum: 6555 },
+  pattern2: { evenTotalCount: 57, oddTotalCount: 57 },
+  pattern3: 3303,
+  pattern4: { H: 30, I: 27, J: 30, K: 27 }
+} as const
+
+// Display helpers so every component formats patterns the same way
+export const formatPattern1 = (evenTotalSum: number, oddTotalSum: number) => `${evenTotalSum}/${oddTotalSum}`
+export const formatPattern2 = (evenTotalCount: number, oddTotalCount: number) => `${evenTotalCount}:${oddTotalCount}`
+export const formatPattern4 = (H: number, I: number, J: number, K: number) => `${H}-${I}-${J}-${K}`
+
+export const EXPECTED_LABELS = {
+  pattern1: formatPattern1(EXPECTED.pattern1.evenTotalSum, EXPECTED.pattern1.oddTotalSum),
+  pattern2: formatPattern2(EXPECTED.pattern2.evenTotalCount, EXPECTED.pattern2.oddTotalCount),
+  pattern3: String(EXPECTED.pattern3),
+  pattern4: formatPattern4(EXPECTED.pattern4.H, EXPECTED.pattern4.I, EXPECTED.pattern4.J, EXPECTED.pattern4.K)
+} as const
+
+// The four patterns are not independent. They reduce to two core facts:
+//
+// Sum balance (patterns 1 & 3): F = G
+//   Σ D = Σ(A | C even) + Σ(B | C even), so Σ D = Σ B  ⇔  Σ(A | C even) = Σ(B | C odd), i.e. F = G.
+//   Σ E = Σ A then follows, because Σ D + Σ E = Σ A + Σ B.
+//
+// Parity balance (patterns 2 & 4): H = J
+//   C is even exactly when A and B share parity, so COUNT(C even) = H + K.
+//   There are always 57 odd surah numbers, so J + K = 57, hence H + K = 57  ⇔  H = J.
+//   I = 57 - H and K = 57 - J are then fixed as well.
+export const CORE_FACTS = {
+  sumBalance: {
+    title: 'Sum Balance',
+    statement: 'Σ(A where A+B is even) = Σ(B where A+B is odd)',
+    patterns: ['pattern1', 'pattern3'] as const
+  },
+  parityBalance: {
+    title: 'Parity Balance',
+    statement: 'COUNT(A even, B even) = COUNT(A odd, B even)',
+    patterns: ['pattern2', 'pattern4'] as const
+  }
+} as const
+
+export function checkCoreFacts(results: PatternResults) {
+  return {
+    sumBalance: results.chapterSumIfEvenTotal === results.verseSumIfOddTotal,
+    parityBalance: results.evenSurahEvenVerses === results.oddSurahEvenVerses
+  }
+}
 
 // Validate natural patterns
-export function validateNaturalPatterns(results: PatternResults, surahs = quranData): PatternValidation {
-  // Calculate Pattern 3 values (F and G)
-  const pattern3Values = calculatePattern3Values(surahs)
-  
-  // Calculate Pattern 4 counts (H, I, J, K)
-  const pattern4Counts = calculatePattern4Counts(surahs)
-  
-  // Calculate Pattern 9 values (Z and AA)
-  const pattern9Values = calculatePattern9Values(surahs)
-  
+// Uses only `results`, so the validation always matches the data the results were computed from.
+export function validateNaturalPatterns(results: PatternResults): PatternValidation {
   return {
-    // Pattern 1: Perfect balance 6555/6236
-    pattern1: results.sumSurahNumbers === 6555 && results.sumVerseCounts === 6236,
-    
-    // Pattern 2: Perfect 57:57 distribution
-    pattern2: results.evenSurahs === 57 && results.oddSurahs === 57,
-    
+    // Pattern 1: Σ(C even) = ΣB = 6236 and Σ(C odd) = ΣA = 6555
+    pattern1: results.evenTotalSum === EXPECTED.pattern1.evenTotalSum &&
+              results.oddTotalSum === EXPECTED.pattern1.oddTotalSum &&
+              results.evenTotalSum === results.sumVerseCounts &&
+              results.oddTotalSum === results.sumSurahNumbers,
+
+    // Pattern 2: 57 surahs with even C, 57 with odd C
+    pattern2: results.evenTotalCount === EXPECTED.pattern2.evenTotalCount &&
+              results.oddTotalCount === EXPECTED.pattern2.oddTotalCount,
+
     // Pattern 3: 3303 symmetry (F=G where F=chapter if total even, G=verses if total odd)
-    pattern3: pattern3Values.F === 3303 && pattern3Values.G === 3303,
-    
-    // Pattern 4: 30-27-27-30 parity combinations (count of H, I, J, K)
-    pattern4: pattern4Counts.H === 30 && 
-              pattern4Counts.I === 27 &&
-              pattern4Counts.J === 30 &&
-              pattern4Counts.K === 27,
-    
-    // Pattern 9: Z+AA=6236 (prime verses + nth prime sum)
-    pattern9: (pattern9Values.Z + pattern9Values.AA) === 6236,
-    
-    // Pattern 10: Golden ratio φ ≈ 1.618424
-    pattern10: Math.abs(results.goldenRatio - 1.618424) < 0.001
+    pattern3: results.chapterSumIfEvenTotal === EXPECTED.pattern3 &&
+              results.verseSumIfOddTotal === EXPECTED.pattern3,
+
+    // Pattern 4: 30-27-30-27 parity combinations (count of H, I, J, K)
+    pattern4: results.evenSurahEvenVerses === EXPECTED.pattern4.H &&
+              results.evenSurahOddVerses === EXPECTED.pattern4.I &&
+              results.oddSurahEvenVerses === EXPECTED.pattern4.J &&
+              results.oddSurahOddVerses === EXPECTED.pattern4.K
   }
 }
 
 // Get pattern summary for UI display
 export function getPatternSummary(results: PatternResults, validation: PatternValidation) {
-  // Calculate Pattern 3 value for summary
-  const pattern3Value = results.sumSurahNumbers - results.sumVerseCounts + results.evenSurahs - results.oddSurahs
-  
+  const F = results.chapterSumIfEvenTotal
+  const G = results.verseSumIfOddTotal
+
   return {
     pattern1: {
       description: "Perfect Balance",
-      value: `${results.sumSurahNumbers}/${results.sumVerseCounts}`,
-      expected: "6555/6236",
+      value: formatPattern1(results.evenTotalSum, results.oddTotalSum),
+      expected: EXPECTED_LABELS.pattern1,
       valid: validation.pattern1
     },
     pattern2: {
-      description: "57:57 Distribution", 
-      value: `${results.evenSurahs}:${results.oddSurahs}`,
-      expected: "57:57",
+      description: "57:57 Distribution",
+      value: formatPattern2(results.evenTotalCount, results.oddTotalCount),
+      expected: EXPECTED_LABELS.pattern2,
       valid: validation.pattern2
     },
     pattern3: {
       description: "3303 Symmetry",
-      value: pattern3Value,
-      expected: 3303,
+      value: F === G ? String(F) : `${F}/${G}`,
+      expected: EXPECTED_LABELS.pattern3,
       valid: validation.pattern3
     },
     pattern4: {
       description: "Parity Matrix",
-      value: `${results.evenSurahEvenVerses}-${results.evenSurahOddVerses}-${results.oddSurahEvenVerses}-${results.oddSurahOddVerses}`,
-      expected: "30-27-27-30",
+      value: formatPattern4(results.evenSurahEvenVerses, results.evenSurahOddVerses, results.oddSurahEvenVerses, results.oddSurahOddVerses),
+      expected: EXPECTED_LABELS.pattern4,
       valid: validation.pattern4
-    },
-    pattern9: {
-      description: "Prime Sum",
-      value: results.primeVersesSum + results.nthPrimeSum,
-      expected: 6236,
-      valid: validation.pattern9
-    },
-    pattern10: {
-      description: "Golden Ratio",
-      value: results.goldenRatio.toFixed(6),
-      expected: "1.618424",
-      valid: validation.pattern10
     }
   }
 }

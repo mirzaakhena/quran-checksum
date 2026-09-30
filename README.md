@@ -28,7 +28,7 @@ I call this finding the "Quran Checksum" because it focuses on the most basic st
 
 The Quran has 114 surahs, structured like an ordinary book — chapter numbers (surahs) and paragraphs (verses). The mathematical miracle is hidden in the relationship between each surah's number and its verse count.
 
-## 10 Verified Mathematical Patterns
+## 4 Verified Patterns, 2 Core Facts
 
 ### Pattern 1: The Perfect 6555/6236 Balance ✅
 
@@ -54,82 +54,33 @@ A perfect 50:50 split!
 
 A perfect mathematical balance!
 
-### Pattern 4: The Symmetric 30-27-27-30 Distribution ✅
+### Pattern 4: The Symmetric 30-27-30-27 Distribution ✅
 
 Categorizing by the parity of the surah number and of the verse count:
 - Even surah + even verses = **30** surahs
-- Odd surah + odd verses = **27** surahs
 - Even surah + odd verses = **27** surahs
 - Odd surah + even verses = **30** surahs
+- Odd surah + odd verses = **27** surahs
 
 Perfect symmetry: 30=30 and 27=27!
 
-### Pattern 5: The Balance Among Surahs with an Even Verse Count (2690=2690) ✅
+### The Two Core Facts Behind the Four Patterns
 
-Of the 60 surahs that have an even number of verses:
-- The first 27 surahs: their verse counts sum to **2690**
-- The last 33 surahs: their surah numbers sum to **2690**
+The four patterns are not independent. Mathematically, they reduce to two facts:
 
-### Pattern 6: Symmetry in the Spreadsheet Formulas ✅
+**Core Fact 1: Sum Balance (Patterns 1 & 3)**
+- The sum of the surah numbers in the EVEN-total group equals the sum of the verse counts in the ODD-total group (3303 = 3303).
+- Pattern 1 follows from this: the EVEN group's total is (its surah numbers) + (its verse counts) = (the ODD group's verse counts) + (its own verse counts) = all verses = 6236. The ODD group then gets the rest, 6555.
 
-Based on a more elaborate categorization:
-- N2 = Q2 = **1554**
-- O2 = P2 = **1551**
-- R2 = U2 = **1752**
-- S2 = T2 = **1698**
+**Core Fact 2: Parity Balance (Patterns 2 & 4)**
+- The number of surahs with an even number AND an even verse count equals the number with an odd number AND an even verse count (30 = 30).
+- Pattern 2 follows from this: a surah's total is even exactly when its number and verse count are both even or both odd. There are always 57 odd surah numbers, so the 57:57 split holds exactly when the two counts above are equal. Once they are 30, the other two (27 and 27) are fixed as well.
 
-Perfect symmetry in every pair!
+## Computational Complexity
 
-### Pattern 7: The Prime Number Balance (5160=5160) ✅
-
-- V116 (the sum of the n-th prime numbers for prime verse counts) = **5160**
-- W116 (the sum of verse counts for non-prime surahs) = **5160**
-
-### Pattern 8: Primes and Multiples of 19 (2000=2000) ✅
-
-- X116 (the sum of verse counts for prime surahs NOT divisible by 19) = **2000**
-- Y116 (the sum of the n-th prime numbers for surahs divisible by 19) = **2000**
-
-### Pattern 9: The Prime Pattern in Verse Counts (6236) ✅
-
-- Z116 (the sum of verse counts that are prime numbers) = **1076**
-- AA116 (the n-th prime number, where n = the count of prime verse counts) = **5160**
-- **Total**: Z116 + AA116 = **6236** (identical to the Quran's total verse count!)
-
-### Pattern 10: The Golden Ratio (φ) ✅
-
-Analyzing the distribution of the values (surah number + verse count):
-- Values that occur more than once: total = **7906**
-- Values that occur exactly once: total = **4885**
-- **Ratio**: 7906 ÷ 4885 = **1.618424** ≈ φ (1.618034)
-- A difference from the golden ratio of only **0.000390** (0.024%)
-
-## Probability Analysis: Why Coincidence Is Impossible
-
-**Combined Probability:** Based on a comprehensive probabilistic analysis, the chance of all these patterns arising at random is **1 in 10^50**!
-
-**Individual Probabilities:**
-- Patterns 1 & 2: 1 in 13.5
-- Pattern 3: 1 in 10 billion
-- Pattern 4: 1 in 100 million
-- Pattern 5: 1 in 1 million
-- Pattern 6: 1 in 100 million
-- Pattern 7: 1 in 1 million
-- Pattern 8: 1 in 100 thousand
-- Pattern 9: 1 in 1 billion (a perfect prime combination)
-- Pattern 10: 1 in 10 million (a naturally emerging golden ratio)
-
-**Putting 10^50 in Perspective:**
-- Comparable to the number of atoms in the entire Earth (≈10^50)
-- Larger than the number of grains of sand on Earth (≈10^20)
-- Greater than the number of cells in every living organism on Earth
-
-**Computational Complexity:**
 - Finding 57 numbers between 1 and 114 that sum to EXACTLY 3303
 - Designing a verse distribution with perfect symmetry
-- Producing the golden ratio naturally out of the distribution of values
-- Building a prime balance that lands on exactly the total verse count
-- Sustaining 10+ simultaneous mathematical patterns across 23 years of revelation
+- Sustaining both core facts simultaneously across 23 years of revelation
 
 ## Why Could No Human Have Made This?
 
@@ -174,7 +125,7 @@ Analyzing the distribution of the values (surah number + verse count):
 **A Mathematical Reality:** Anyone can verify these patterns with a spreadsheet or a calculator.
 
 **Eliminating the Alternatives:**
-1. **Coincidence:** Statistically impossible (< 1 in 10^50)
+1. **Coincidence:** Statistically impossible
 2. **A hidden genius:** Undocumented in history and contextually impossible
 3. **Divine authorship:** Consistent with Islamic theological claims
 

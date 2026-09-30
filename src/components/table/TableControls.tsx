@@ -1,6 +1,7 @@
 import { TableControlsProps } from './types'
 
 export default function TableControls({
+  colSpan,
   showAllRows,
   onToggleRows,
   totalRows,
@@ -9,7 +10,7 @@ export default function TableControls({
   if (!showAllRows && currentRows < totalRows) {
     return (
       <tr className="bg-yellow-50">
-        <td colSpan={14} className="p-2 text-center text-gray-600">
+        <td colSpan={colSpan} className="p-2 text-center text-gray-600">
           <div className="text-xs">
             📊 Showing first {currentRows} rows of {totalRows} total surahs
             <button 
@@ -27,7 +28,7 @@ export default function TableControls({
   if (showAllRows) {
     return (
       <tr className="bg-green-50">
-        <td colSpan={14} className="p-2 text-center text-gray-600">
+        <td colSpan={colSpan} className="p-2 text-center text-gray-600">
           <div className="text-xs">
             📊 Showing all {totalRows} surahs
             <button 

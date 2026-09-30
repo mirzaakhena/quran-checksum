@@ -4,4 +4,3 @@
 export * from './data'
 export * from './types'
 export * from './core'
-export * from './utils'

@@ -16,11 +16,7 @@ export default {
         'pattern-4-combo1': '#EF4444',
         'pattern-4-combo2': '#8B5CF6',
         'pattern-4-combo3': '#06B6D4',
-        'pattern-4-combo4': '#F97316',
-        'pattern-9-prime': '#7C3AED',
-        'pattern-9-nth': '#A855F7',
-        'pattern-10-repetitive': '#DC2626',
-        'pattern-10-nonrep': '#2563EB'
+        'pattern-4-combo4': '#F97316'
       }
     },
   },

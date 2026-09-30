@@ -8,69 +8,35 @@ export interface QuranSurah {
 
 // Pattern calculation results
 export interface PatternResults {
-  // Basic sums
+  // Basic sums (Σ Column A, Σ Column B)
   sumSurahNumbers: number;
   sumVerseCounts: number;
-  
-  // Even/odd classification counts
-  evenSurahs: number;
-  oddSurahs: number;
-  evenVerses: number;
-  oddVerses: number;
-  
-  // Pattern combinations
+
+  // Pattern 1 & 2 - Column C (A+B) split by parity (Columns D and E)
+  evenTotalSum: number;    // Σ D: sum of C where C is even
+  oddTotalSum: number;     // Σ E: sum of C where C is odd
+  evenTotalCount: number;  // count of surahs where C is even
+  oddTotalCount: number;   // count of surahs where C is odd
+
+  // Pattern 3 - Conditional sums (Columns F and G)
+  chapterSumIfEvenTotal: number;  // Σ F: A where C is even
+  verseSumIfOddTotal: number;     // Σ G: B where C is odd
+
+  // Pattern 4 - Parity combinations (Columns H, I, J, K)
   evenSurahEvenVerses: number;
   evenSurahOddVerses: number;
   oddSurahEvenVerses: number;
   oddSurahOddVerses: number;
-  
-  // Pattern 9 - Prime calculations
-  primeVersesSum: number;
-  nthPrimeSum: number;
-  
-  // Pattern 10 - Golden ratio
-  goldenRatio: number;
-  repetitiveSum: number;
-  nonRepetitiveSum: number;
-  repetitiveCount: number;
-  nonRepetitiveCount: number;
-}
-
-// Detailed breakdown for Pattern 10
-export interface GoldenRatioDetails {
-  repetitiveValues: number[];  // List of Column C values (A+B) that appear more than once
-  nonRepetitiveValues: number[];  // List of Column C values (A+B) that appear only once
-  repetitiveSum: number;  // Sum of all repetitive Column C values
-  nonRepetitiveSum: number;  // Sum of all non-repetitive Column C values
-  repetitiveCount: number;  // Total count of repetitive occurrences
-  nonRepetitiveCount: number;  // Count of non-repetitive Column C values
-  goldenRatio: number;  // repetitiveSum / nonRepetitiveSum
-  columnCFrequency: Map<number, number>;  // Map of Column C value to frequency
-  repetitiveBreakdown: RepetitiveValueBreakdown[];  // Detailed breakdown of repetitive values
-  nonRepetitiveBreakdown: NonRepetitiveValueBreakdown[];  // Detailed breakdown of non-repetitive values
-}
-
-// Detailed breakdown for each repetitive value
-export interface RepetitiveValueBreakdown {
-  columnCValue: number;  // The Column C value (A+B)
-  frequency: number;     // How many times it appears
-  surahs: number[];      // Which surahs have this value
-}
-
-// Detailed breakdown for each non-repetitive value
-export interface NonRepetitiveValueBreakdown {
-  columnCValue: number;  // The Column C value (A+B)
-  surah: number;         // Which surah has this value
 }
 
 // Pattern validation results
+// Patterns 1 & 3 express the same fact (F = G), as do patterns 2 & 4 (H = J);
+// see CORE_FACTS in core/validators.ts.
 export interface PatternValidation {
-  pattern1: boolean; // 6555/6236 balance
-  pattern2: boolean; // 57:57 distribution
+  pattern1: boolean; // Σ(C even)=6236=ΣB, Σ(C odd)=6555=ΣA
+  pattern2: boolean; // 57:57 distribution of C parity
   pattern3: boolean; // 3303 symmetry
-  pattern4: boolean; // 30-27-27-30 parity
-  pattern9: boolean; // Z+AA=6236
-  pattern10: boolean; // φ ≈ 1.618424
+  pattern4: boolean; // 30-27-30-27 parity (H-I-J-K)
 }
 
 // Game state for challenge mode

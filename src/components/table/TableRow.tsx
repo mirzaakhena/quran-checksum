@@ -8,7 +8,6 @@ export default function TableRow({
   selectedCell,
   getCellValue,
   getPatternHighlight,
-  goldenRatioDetails,
   onCellHover,
   onCellClick,
   onMouseMove,
@@ -27,10 +26,8 @@ export default function TableRow({
           <td
             key={col.id}
             className={getCellStyling(
-              surah,
               col.id,
               value,
-              goldenRatioDetails,
               getPatternHighlight,
               index,
               selectedCell,

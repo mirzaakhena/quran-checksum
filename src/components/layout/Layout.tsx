@@ -12,7 +12,7 @@ export default function Layout({ children }: LayoutProps) {
     { 
       path: '/natural-patterns', 
       label: 'Natural Patterns', 
-      description: 'Primary Focus - Bulletproof Patterns',
+      description: 'Surah numbers and verse counts',
       status: '🟢'
     }
   ]
@@ -38,10 +38,10 @@ export default function Layout({ children }: LayoutProps) {
                 114 Surahs
               </div>
               <div className="bg-quran-green text-white px-3 py-1 rounded-full">
-                6 Patterns
+                2 Core Facts
               </div>
               <div className="bg-quran-gold text-white px-3 py-1 rounded-full">
-                1:10^50 Probability
+                4 Patterns
               </div>
             </div>
           </div>

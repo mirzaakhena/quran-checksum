@@ -1,5 +1,7 @@
 import { TableFooterProps } from './types'
 
+import { getPatternFromColumnId } from './utils'
+
 export default function TableFooter({
   columns,
   getColumnTotal,
@@ -14,8 +16,6 @@ export default function TableFooter({
         return 'text-lg font-bold text-blue-600 bg-blue-100'
       case 'B':
       case 'D':
-      case 'Z':
-      case 'AA':
         return 'text-lg font-bold text-green-600 bg-green-100'
       case 'F':
       case 'G':
@@ -65,7 +65,10 @@ export default function TableFooter({
                 ${getFooterColorClass(col.id)}
                 ${getPatternHighlight(col.id)}
               `}
-              onClick={() => onPatternSelect(`total-${col.id}`)}
+              onClick={() => {
+                const pattern = getPatternFromColumnId(col.id)
+                if (pattern) onPatternSelect(pattern)
+              }}
               title={`
                 ${['C', 'H', 'I', 'J', 'K'].includes(col.id) 
                   ? (col.id === 'C' 
@@ -114,7 +117,7 @@ export default function TableFooter({
                   ? `Count of non-empty values in column ${col.id}: ${count}\n${
                       ['D', 'E'].includes(col.id) 
                         ? 'Part of Pattern 2: 57:57 Distribution' 
-                        : 'Part of Pattern 4: 30-27-27-30 Parity Matrix'
+                        : 'Part of Pattern 4: 30-27-30-27 Parity Matrix'
                     }` 
                   : 'Count not relevant for this column'
                 }

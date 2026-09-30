@@ -1,4 +1,5 @@
 import { PatternResults, PatternValidation } from '../../v2/types'
+import { CORE_FACTS, EXPECTED, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core'
 
 interface PatternModalProps {
   patternId: string
@@ -15,58 +16,58 @@ interface PatternInfo {
   expectedValue: string | number
   isValid: boolean
   explanation: string
-  probability?: string
 }
 
 export default function PatternModal({ patternId, results, validation, onClose }: PatternModalProps) {
+  const F = results.chapterSumIfEvenTotal
+  const G = results.verseSumIfOddTotal
+  const H = results.evenSurahEvenVerses
+  const J = results.oddSurahEvenVerses
+
   const getPatternInfo = (): PatternInfo => {
     switch (patternId) {
       case 'pattern1':
         return {
           title: 'Pattern 1: Perfect Balance',
-          description: 'The sum of all surah numbers (6555) perfectly balances with the sum of all verse counts (6236)',
-          formula: 'Σ(Surah Numbers) vs Σ(Verse Counts)',
-          currentValue: `${results.sumSurahNumbers} vs ${results.sumVerseCounts}`,
-          expectedValue: '6555 vs 6236',
+          description: 'Splitting A+B by parity: the even group sums to the total verse count (6236) and the odd group sums to the sum of surah numbers (6555)',
+          formula: 'Σ(A+B where even) = Σ(Verse Counts), Σ(A+B where odd) = Σ(Surah Numbers)',
+          currentValue: formatPattern1(results.evenTotalSum, results.oddTotalSum),
+          expectedValue: EXPECTED_LABELS.pattern1,
           isValid: validation.pattern1,
-          explanation: 'This represents a perfect mathematical balance between the structural indices (surah numbers 1-114) and the content quantities (verse counts). The probability of this occurring randomly is astronomically low.',
-          probability: '1 in 10^12'
+          explanation: `Core fact "${CORE_FACTS.sumBalance.title}". Σ(A+B where even) is Σ(A where even) + Σ(B where even), so it equals the total verse count exactly when Σ(A where A+B even) = Σ(B where A+B odd), which is F = G in Pattern 3 (currently F = ${F}, G = ${G}). The odd group then equals 6555 automatically, because the two groups together always add up to 6555 + 6236.`
         }
 
       case 'pattern2':
         return {
           title: 'Pattern 2: 57:57 Distribution', 
-          description: 'Perfect split between even and odd numbered surahs',
-          formula: 'COUNT(Even Surahs) : COUNT(Odd Surahs)',
-          currentValue: `${results.evenSurahs}:${results.oddSurahs}`,
-          expectedValue: '57:57',
+          description: 'Perfect split between surahs whose A+B is even and surahs whose A+B is odd',
+          formula: 'COUNT(A+B even) : COUNT(A+B odd)',
+          currentValue: formatPattern2(results.evenTotalCount, results.oddTotalCount),
+          expectedValue: EXPECTED_LABELS.pattern2,
           isValid: validation.pattern2,
-          explanation: 'With 114 total surahs, achieving exactly 57 even and 57 odd numbered surahs represents perfect symmetry in the structural organization.',
-          probability: '1 in 10^3'
+          explanation: `Core fact "${CORE_FACTS.parityBalance.title}". A+B is even exactly when A and B are both even (H) or both odd (K). Since there are always 57 odd surah numbers (J + K = 57), the 57:57 split holds exactly when H = J (currently H = ${H}, J = ${J}).`
+        }
+
+      case 'pattern3':
+        return {
+          title: 'Pattern 3: 3303 Symmetry',
+          description: 'Surah numbers where A+B is even add up to the same total as verse counts where A+B is odd',
+          formula: 'F = Σ(A where A+B even), G = Σ(B where A+B odd), F = G',
+          currentValue: F === G ? String(F) : `${F}/${G}`,
+          expectedValue: EXPECTED_LABELS.pattern3,
+          isValid: validation.pattern3,
+          explanation: `Core fact "${CORE_FACTS.sumBalance.title}". F = G is the same statement as Pattern 1; this pattern adds only the specific value 3303.`
         }
 
       case 'pattern4':
         return {
-          title: 'Pattern 4: Parity Matrix 30-27-27-30',
-          description: 'Four-way classification of surahs by even/odd combinations creates perfect symmetry',
-          formula: 'COUNT combinations of (Surah Even/Odd, Verses Even/Odd)',
-          currentValue: `${results.evenSurahEvenVerses}-${results.evenSurahOddVerses}-${results.oddSurahEvenVerses}-${results.oddSurahOddVerses}`,
-          expectedValue: '30-27-27-30',
+          title: `Pattern 4: Parity Matrix ${EXPECTED_LABELS.pattern4}`,
+          description: 'Four-way classification of surahs by the parity of the surah number and of the verse count',
+          formula: 'COUNT of H (even-even) - I (even-odd) - J (odd-even) - K (odd-odd)',
+          currentValue: formatPattern4(H, results.evenSurahOddVerses, J, results.oddSurahOddVerses),
+          expectedValue: EXPECTED_LABELS.pattern4,
           isValid: validation.pattern4,
-          explanation: 'This represents a sophisticated four-way symmetry where surahs are classified by both their position parity and verse count parity, resulting in a mirror pattern.',
-          probability: '1 in 10^8'
-        }
-
-      case 'pattern9':
-        return {
-          title: 'Pattern 9: Prime Sum Z+AA=6236',
-          description: 'Sum of prime verse counts plus sum of corresponding nth primes equals total verses',
-          formula: 'Σ(Prime Verses) + Σ(nth_prime(surah_number)) = Total Verses',
-          currentValue: `${results.primeVersesSum} + ${results.nthPrimeSum} = ${results.primeVersesSum + results.nthPrimeSum}`,
-          expectedValue: '6236',
-          isValid: validation.pattern9,
-          explanation: 'This connects prime numbers in verse counts with positional prime sequences, creating a relationship between content structure and mathematical sequences.',
-          probability: '1 in 10^15'
+          explanation: `Core fact "${CORE_FACTS.parityBalance.title}". There are always 57 even and 57 odd surah numbers, so H + I = 57 and J + K = 57: once H and J are known, I and K follow. The symmetry H = J is the same statement as Pattern 2; this pattern adds only the specific value H = J = 30 (60 surahs with an even verse count).`
         }
 
       case 'surah-numbers':
@@ -75,9 +76,9 @@ export default function PatternModal({ patternId, results, validation, onClose }
           description: 'Sequential numbering from 1 to 114',
           formula: 'Surah index position',
           currentValue: `Sum = ${results.sumSurahNumbers}`,
-          expectedValue: '6555',
-          isValid: results.sumSurahNumbers === 6555,
-          explanation: 'The sum of consecutive integers from 1 to 114 equals 6555. This is part of Pattern 1 where this sum balances perfectly with the total verse count of 6236.'
+          expectedValue: String(EXPECTED.sumSurahNumbers),
+          isValid: results.sumSurahNumbers === EXPECTED.sumSurahNumbers,
+          explanation: 'The sum of consecutive integers from 1 to 114 always equals 6555. In Pattern 1, this is exactly the sum of A+B over the surahs whose A+B is odd.'
         }
 
       case 'verse-counts':
@@ -86,25 +87,12 @@ export default function PatternModal({ patternId, results, validation, onClose }
           description: 'Number of verses in each surah',
           formula: 'Actual verse count per surah',
           currentValue: `Sum = ${results.sumVerseCounts}`,
-          expectedValue: '6236',
-          isValid: results.sumVerseCounts === 6236,
-          explanation: 'The total number of verses in the Quran is 6236. This total balances perfectly with the sum of surah numbers (6555) in Pattern 1.'
+          expectedValue: String(EXPECTED.sumVerseCounts),
+          isValid: results.sumVerseCounts === EXPECTED.sumVerseCounts,
+          explanation: 'The total number of verses in the Quran is 6236 (Kufan count). In Pattern 1, this is exactly the sum of A+B over the surahs whose A+B is even.'
         }
 
       default:
-        if (patternId.startsWith('total-')) {
-          const column = patternId.replace('total-', '')
-          return {
-            title: `Column ${column} Total`,
-            description: `Sum of all values in column ${column}`,
-            formula: `Σ(Column ${column})`,
-            currentValue: 'Click for details',
-            expectedValue: 'Varies',
-            isValid: true,
-            explanation: `This total contributes to the overall mathematical patterns in the Quran's structure.`
-          }
-        }
-
         return {
           title: 'Pattern Information',
           description: 'Mathematical relationship in Quran structure',
@@ -112,7 +100,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           currentValue: 'See table',
           expectedValue: 'Specific values',
           isValid: true,
-          explanation: 'Each pattern represents a different aspect of the mathematical structure within the Quran.'
+          explanation: 'Click a column header or a total to see the pattern it belongs to.'
         }
     }
   }
@@ -194,16 +182,6 @@ export default function PatternModal({ patternId, results, validation, onClose }
             <h4 className="font-semibold text-gray-700 mb-2">Explanation</h4>
             <p className="text-gray-600 leading-relaxed">{patternInfo.explanation}</p>
           </div>
-
-          {/* Probability */}
-          {patternInfo.probability && (
-            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-              <h4 className="font-semibold text-yellow-800 mb-2">Statistical Probability</h4>
-              <p className="text-yellow-700">
-                Estimated probability of this pattern occurring by chance: <strong>{patternInfo.probability}</strong>
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Footer */}

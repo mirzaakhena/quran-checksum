@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
 import { PatternValidation } from '../../v2/types'
 import { quranData } from '../../v2/data'
-import { calculateNaturalPatterns, validateNaturalPatterns, calculateGoldenRatioDetails, calculatePattern3Values, calculatePattern4Counts, calculatePattern9Values } from '../../v2/core'
+import { calculateNaturalPatterns, validateNaturalPatterns } from '../../v2/core'
 import PatternModal from '../modals/PatternModal'
 import CellTooltip from '../modals/CellTooltip'
-import GoldenRatioCard from '../patterns/GoldenRatioCard'
 import { useTableState } from '../../hooks/useTableState'
 
 import TableHeader from './TableHeader'
@@ -22,7 +21,6 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const columns = useMemo(() => createTableColumns(), [])
   const results = useMemo(() => calculateNaturalPatterns(quranData), [])
   const validation: PatternValidation = useMemo(() => validateNaturalPatterns(results), [results])
-  const goldenRatioDetails = useMemo(() => calculateGoldenRatioDetails(quranData), [])
 
   const wrappedGetColumnTotal = (columnId: string) => getColumnTotal(quranData, columnId)
   const wrappedGetColumnCount = (columnId: string) => getColumnCount(quranData, columnId)
@@ -35,10 +33,6 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
       <TableHeader
         validation={validation}
         results={results}
-        pattern3Values={calculatePattern3Values(quranData)}
-        pattern4Counts={calculatePattern4Counts(quranData)}
-        pattern9Values={calculatePattern9Values(quranData)}
-        getColumnCount={wrappedGetColumnCount}
       />
 
       <div className="w-full overflow-x-auto md:overflow-x-visible">
@@ -60,7 +54,6 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
                 selectedPattern={tableState.selectedPattern}
                 getCellValue={getCellValue}
                 getPatternHighlight={wrappedGetPatternHighlight}
-                goldenRatioDetails={goldenRatioDetails}
                 onCellHover={handleCellHover}
                 onCellClick={handleCellClick}
                 onMouseMove={handleMouseMove}
@@ -69,6 +62,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             ))}
             
             <TableControls
+              colSpan={columns.length + 1}
               showAllRows={tableState.showAllRows}
               onToggleRows={handleToggleRows}
               totalRows={114}
@@ -85,10 +79,6 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             onPatternSelect={handlePatternSelect}
           />
         </table>
-      </div>
-
-      <div className="mt-6">
-        <GoldenRatioCard />
       </div>
 
       {tableState.hoveredCell && (

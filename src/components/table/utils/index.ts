@@ -1,5 +1,4 @@
 import { QuranSurah } from '../../../v2/types'
-import { isPrime, getNthPrime } from '../../../v2/utils/math'
 import { TableColumn } from '../types'
 
 export const createTableColumns = (): TableColumn[] => [
@@ -13,9 +12,7 @@ export const createTableColumns = (): TableColumn[] => [
   { id: 'H', label: 'H', description: 'Even-Even', formula: 'IF(A even AND B even, ✓, "")', className: 'bg-pattern-4-combo1/20 w-10' },
   { id: 'I', label: 'I', description: 'Even-Odd', formula: 'IF(A even AND B odd, ✓, "")', className: 'bg-pattern-4-combo2/20 w-10' },
   { id: 'J', label: 'J', description: 'Odd-Even', formula: 'IF(A odd AND B even, ✓, "")', className: 'bg-pattern-4-combo3/20 w-10' },
-  { id: 'K', label: 'K', description: 'Odd-\nOdd', formula: 'IF(A odd AND B odd, ✓, "")', className: 'bg-pattern-4-combo4/20 w-10' },
-  { id: 'Z', label: 'Z', description: 'Prime Verses', formula: 'IF(B is prime, B, "")', className: 'bg-pattern-9-prime/20 w-16' },
-  { id: 'AA', label: 'AA', description: 'Nth Prime', formula: 'IF(B is prime, nth_prime(B), "")', className: 'bg-pattern-9-nth/20 w-20' }
+  { id: 'K', label: 'K', description: 'Odd-\nOdd', formula: 'IF(A odd AND B odd, ✓, "")', className: 'bg-pattern-4-combo4/20 w-10' }
 ]
 
 export const getCellValue = (surah: QuranSurah, columnId: string): number | string => {
@@ -25,7 +22,6 @@ export const getCellValue = (surah: QuranSurah, columnId: string): number | stri
   const isAEven = A % 2 === 0
   const isBEven = B % 2 === 0
   const isCEven = C % 2 === 0
-  const isBPrime = isPrime(B)
 
   switch (columnId) {
     case 'A': return A
@@ -39,8 +35,6 @@ export const getCellValue = (surah: QuranSurah, columnId: string): number | stri
     case 'I': return isAEven && !isBEven ? '✓' : ''
     case 'J': return !isAEven && isBEven ? '✓' : ''
     case 'K': return !isAEven && !isBEven ? '✓' : ''
-    case 'Z': return isBPrime ? B : ''
-    case 'AA': return isBPrime ? getNthPrime(B) : ''
     default: return ''
   }
 }
@@ -64,13 +58,13 @@ export const getPatternHighlight = (columnId: string, selectedPattern: string | 
   
   switch (selectedPattern) {
     case 'pattern1':
-      return columnId === 'A' || columnId === 'B' ? 'ring-2 ring-blue-400 bg-blue-100' : ''
+      return ['A', 'B', 'D', 'E'].includes(columnId) ? 'ring-2 ring-blue-400 bg-blue-100' : ''
     case 'pattern2':
       return columnId === 'D' || columnId === 'E' ? 'ring-2 ring-green-400 bg-green-100' : ''
+    case 'pattern3':
+      return columnId === 'F' || columnId === 'G' ? 'ring-2 ring-yellow-400 bg-yellow-100' : ''
     case 'pattern4':
       return ['H', 'I', 'J', 'K'].includes(columnId) ? 'ring-2 ring-purple-400 bg-purple-100' : ''
-    case 'pattern9':
-      return columnId === 'Z' || columnId === 'AA' ? 'ring-2 ring-orange-400 bg-orange-100' : ''
     default:
       return ''
   }
@@ -80,23 +74,21 @@ export const getPatternFromColumnId = (columnId: string): string | null => {
   const patternMap: { [key: string]: string } = {
     'A': 'surah-numbers',
     'B': 'verse-counts', 
-    'D': 'pattern2',
-    'E': 'pattern2',
+    'D': 'pattern1',
+    'E': 'pattern1',
+    'F': 'pattern3',
+    'G': 'pattern3',
     'H': 'pattern4',
     'I': 'pattern4', 
     'J': 'pattern4',
-    'K': 'pattern4',
-    'Z': 'pattern9',
-    'AA': 'pattern9'
+    'K': 'pattern4'
   }
   return patternMap[columnId] || null
 }
 
 export const getCellStyling = (
-  surah: QuranSurah,
   columnId: string,
   value: number | string,
-  goldenRatioDetails: any,
   getPatternHighlightFn: (columnId: string) => string,
   index: number,
   selectedCell: { row: number; col: string } | null,
@@ -104,23 +96,13 @@ export const getCellStyling = (
 ): string => {
   const isEmpty = value === ''
   const isColumnC = columnId === 'C'
-  const columnCValue = surah.number + surah.verseCount
-  const isRepetitive = isColumnC && goldenRatioDetails && 
-    goldenRatioDetails.repetitiveValues && 
-    goldenRatioDetails.repetitiveValues.includes(columnCValue)
   
   return `
     p-1 text-center cursor-pointer transition-all duration-200
     hover:bg-blue-50 active:bg-blue-100 relative text-xs
     ${baseClassName}
     ${getPatternHighlightFn(columnId)}
-    ${isEmpty ? 'text-gray-300' : (
-      isColumnC ? (
-        isRepetitive 
-          ? 'text-orange-700 font-bold bg-orange-100/70 border border-orange-300' 
-          : 'text-blue-700 font-normal bg-blue-100/50 border border-blue-200'
-      ) : 'text-gray-900'
-    )}
+    ${isEmpty ? 'text-gray-300' : (isColumnC ? 'text-blue-700' : 'text-gray-900')}
     ${selectedCell?.row === index && selectedCell?.col === columnId ? 'ring-2 ring-blue-500' : ''}
   `.trim()
 }

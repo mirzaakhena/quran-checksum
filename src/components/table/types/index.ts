@@ -1,4 +1,4 @@
-import { QuranSurah, PatternValidation } from '../../../v2/types'
+import { QuranSurah, PatternResults, PatternValidation } from '../../../v2/types'
 
 export interface TableColumn {
   id: string
@@ -22,11 +22,7 @@ export interface TableState {
 
 export interface TableHeaderProps {
   validation: PatternValidation
-  results: any
-  pattern3Values: any
-  pattern4Counts: any
-  pattern9Values: any
-  getColumnCount: (columnId: string) => number
+  results: PatternResults
 }
 
 export interface TableColumnHeadersProps {
@@ -43,7 +39,6 @@ export interface TableRowProps {
   selectedPattern: string | null
   getCellValue: (surah: QuranSurah, columnId: string) => number | string
   getPatternHighlight: (columnId: string) => string
-  goldenRatioDetails: any
   onCellHover: (row: number, col: string, event: React.MouseEvent) => void
   onCellClick: (row: number, col: string) => void
   onMouseMove: (event: React.MouseEvent) => void
@@ -60,6 +55,7 @@ export interface TableFooterProps {
 }
 
 export interface TableControlsProps {
+  colSpan: number
   showAllRows: boolean
   onToggleRows: () => void
   totalRows: number

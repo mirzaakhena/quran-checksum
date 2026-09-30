@@ -1,5 +1,4 @@
 import { QuranSurah } from '../../v2/types'
-import { isPrime, getNthPrime } from '../../v2/utils/math'
 import { useState, useEffect } from 'react'
 
 interface CellTooltipProps {
@@ -63,7 +62,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
     const isAEven = A % 2 === 0
     const isBEven = B % 2 === 0
     const isCEven = C % 2 === 0
-    const isBPrime = isPrime(B)
 
     switch (column) {
       case 'A':
@@ -115,18 +113,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
           ? `Surah ${A} (odd) & ${B} verses (odd) → ✓` 
           : `Not odd-odd combination → empty`
       
-      case 'Z':
-        return isBPrime 
-          ? `${B} is prime → ${B}` 
-          : `${B} is not prime → empty`
-      
-      case 'AA':
-        if (isBPrime) {
-          const nthPrime = getNthPrime(B)
-          return `${B} is prime → nth_prime(${B}) = ${nthPrime}`
-        }
-        return `${B} is not prime → empty`
-      
       default:
         return 'Unknown calculation'
     }
@@ -136,25 +122,21 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
     switch (column) {
       case 'A':
       case 'B':
-        return 'Part of Pattern 1: Perfect Balance (6555/6236)'
+        return 'Pattern 1 reference totals (ΣA = 6555, ΣB = 6236)'
       
       case 'D':
       case 'E':
-        return 'Part of Pattern 1: Even/Odd Distribution (6236/6555)'
+        return 'Patterns 1 & 2: Even/Odd A+B (6236/6555, 57:57)'
       
       case 'F':
       case 'G':
-        return 'Part of Pattern 3: Conditional Symmetry (3303/3303)'
+        return 'Pattern 3: Conditional Symmetry (3303/3303), same fact as Pattern 1'
       
       case 'H':
       case 'I': 
       case 'J':
       case 'K':
-        return 'Part of Pattern 4: 30-27-27-30 Parity Matrix'
-      
-      case 'Z':
-      case 'AA':
-        return 'Part of Pattern 9: Prime Sum Z+AA=6236'
+        return 'Pattern 4: 30-27-30-27 Parity Matrix, same fact as Pattern 2'
       
       default:
         return 'Mathematical relationship in Quran structure'
@@ -176,9 +158,6 @@ export default function CellTooltip({ row, column, surah, value, formula, mouseP
       case 'J':
       case 'K':
         return 'border-purple-400 bg-purple-50'
-      case 'Z':
-      case 'AA':
-        return 'border-orange-400 bg-orange-50'
       default:
         return 'border-gray-400 bg-gray-50'
     }
