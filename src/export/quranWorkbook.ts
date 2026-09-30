@@ -1,6 +1,9 @@
-// Builds a downloadable Excel workbook so anyone can verify the patterns themselves.
+// Builds the Excel workbook offered for download so anyone can verify the patterns themselves.
 // Columns C-K and every total/check are live formulas (not pasted values), using the
 // same column letters as the table on the site.
+// The data never changes, so the file is generated once (npm run generate:excel) and served
+// statically from public/; this module is only used by that script and the tests.
+import ExcelJS from 'exceljs'
 import type { Workbook, Worksheet } from 'exceljs'
 import { quranData } from '../v2/data'
 import { calculateNaturalPatterns } from '../v2/core'
@@ -216,27 +219,15 @@ function addChecksSheet(workbook: Workbook) {
   sheet.getCell(r, 5).font = { bold: true }
 }
 
-export async function buildQuranWorkbook(): Promise<Workbook> {
-  // Loaded on demand so the spreadsheet library is only fetched when someone downloads
-  const ExcelJS = (await import('exceljs')).default
+// Fixed so regenerating the file does not change its metadata
+export const WORKBOOK_DATE = new Date('2026-01-01T00:00:00Z')
+
+export function buildQuranWorkbook(): Workbook {
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'Quran Checksum Explorer'
-  workbook.created = new Date()
+  workbook.creator = 'Quran Checksum'
+  workbook.created = WORKBOOK_DATE
+  workbook.modified = WORKBOOK_DATE
   addSurahSheet(workbook)
   addChecksSheet(workbook)
   return workbook
-}
-
-export async function downloadQuranWorkbook() {
-  const workbook = await buildQuranWorkbook()
-  const buffer = await workbook.xlsx.writeBuffer()
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = WORKBOOK_FILENAME
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
 }

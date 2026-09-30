@@ -1,36 +1,18 @@
-import { useState } from 'react';
-import { Button } from './Button';
-import { downloadQuranWorkbook } from '../../export/quranWorkbook';
+// The spreadsheet is generated ahead of time (npm run generate:excel) and served from public/
+const WORKBOOK_URL = `${import.meta.env.BASE_URL}quran-checksum.xlsx`;
 
 interface DownloadExcelButtonProps {
   className?: string;
 }
 
 export function DownloadExcelButton({ className = '' }: DownloadExcelButtonProps) {
-  const [status, setStatus] = useState<'idle' | 'preparing' | 'error'>('idle');
-
-  const handleClick = async () => {
-    setStatus('preparing');
-    try {
-      await downloadQuranWorkbook();
-      setStatus('idle');
-    } catch (error) {
-      console.error('Failed to build the Excel file', error);
-      setStatus('error');
-    }
-  };
-
   return (
-    <Button
-      variant="secondary"
-      size="sm"
-      onClick={handleClick}
-      disabled={status === 'preparing'}
-      className={className}
+    <a
+      href={WORKBOOK_URL}
+      download
+      className={`inline-block font-medium rounded-lg px-3 py-1.5 text-sm bg-quran-green text-white hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-quran-green ${className}`}
     >
-      {status === 'preparing' && 'Preparing Excel…'}
-      {status === 'idle' && '⬇ Download Excel'}
-      {status === 'error' && 'Download failed, try again'}
-    </Button>
+      ⬇ Download Excel
+    </a>
   );
 }

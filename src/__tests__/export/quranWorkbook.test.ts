@@ -1,4 +1,6 @@
-import { buildQuranWorkbook } from '../../export/quranWorkbook'
+import path from 'path'
+import ExcelJS from 'exceljs'
+import { buildQuranWorkbook, WORKBOOK_FILENAME } from '../../export/quranWorkbook'
 import { quranData } from '../../v2/data'
 
 type FormulaValue = { formula: string; result: unknown }
@@ -6,8 +8,8 @@ type FormulaValue = { formula: string; result: unknown }
 const asFormula = (value: unknown) => value as FormulaValue
 
 describe('Quran Checksum Excel export', () => {
-  test('Surahs sheet keeps A and B as values and derives C-K with formulas', async () => {
-    const workbook = await buildQuranWorkbook()
+  test('Surahs sheet keeps A and B as values and derives C-K with formulas', () => {
+    const workbook = buildQuranWorkbook()
     const sheet = workbook.getWorksheet('Surahs')!
 
     // Row 2 is Al-Fatihah: 1 + 7 = 8 (even) -> D, F and K filled
@@ -28,8 +30,8 @@ describe('Quran Checksum Excel export', () => {
     })
   })
 
-  test('TOTAL and COUNT rows are formulas matching the site values', async () => {
-    const workbook = await buildQuranWorkbook()
+  test('TOTAL and COUNT rows are formulas matching the site values', () => {
+    const workbook = buildQuranWorkbook()
     const sheet = workbook.getWorksheet('Surahs')!
 
     const totals = { A: 6555, B: 6236, D: 6236, E: 6555, F: 3303, G: 3303 }
@@ -43,8 +45,8 @@ describe('Quran Checksum Excel export', () => {
     })
   })
 
-  test('Checks sheet compares both sides of every claim with formulas', async () => {
-    const workbook = await buildQuranWorkbook()
+  test('Checks sheet compares both sides of every claim with formulas', () => {
+    const workbook = buildQuranWorkbook()
     const sheet = workbook.getWorksheet('Checks')!
 
     const checks: FormulaValue[] = []
@@ -57,5 +59,29 @@ describe('Quran Checksum Excel export', () => {
     expect(checks).toHaveLength(7)
     checks.forEach(check => expect(check.result).toBe(true))
     expect(checks[checks.length - 1].formula).toMatch(/^AND\(/)
+  })
+
+  test('the committed public/ spreadsheet matches the generator (run npm run generate:excel if not)', async () => {
+    const committed = new ExcelJS.Workbook()
+    await committed.xlsx.readFile(path.join(__dirname, '../../../public', WORKBOOK_FILENAME))
+    const generated = buildQuranWorkbook()
+    
+    const cellsOf = (workbook: ExcelJS.Workbook) => {
+      const cells: Record<string, unknown> = {}
+      workbook.eachSheet(sheet => {
+        sheet.eachRow({ includeEmpty: true }, (row, r) => {
+          row.eachCell({ includeEmpty: true }, (cell, c) => {
+            cells[`${sheet.name}!${r}:${c}`] = cell.value
+          })
+        })
+      })
+      return cells
+    }
+    
+    // Round-trip the generated workbook so both sides are compared as read from a file
+    const roundTripped = new ExcelJS.Workbook()
+    await roundTripped.xlsx.load(await generated.xlsx.writeBuffer())
+    
+    expect(cellsOf(committed)).toEqual(cellsOf(roundTripped))
   })
 })
