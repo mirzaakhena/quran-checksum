@@ -23,25 +23,25 @@ export const EXPECTED_LABELS = {
   pattern4: formatPattern4(EXPECTED.pattern4.H, EXPECTED.pattern4.I, EXPECTED.pattern4.J, EXPECTED.pattern4.K)
 } as const
 
-// The four patterns are not independent. They reduce to two core facts:
+// The four patterns are not independent: they come in two equivalent pairs, and within a pair
+// neither pattern is more fundamental, each holds exactly when the other does.
 //
-// Sum balance (patterns 1 & 3): F = G
-//   Σ D = Σ(A | C even) + Σ(B | C even), so Σ D = Σ B  ⇔  Σ(A | C even) = Σ(B | C odd), i.e. F = G.
-//   Σ E = Σ A then follows, because Σ D + Σ E = Σ A + Σ B.
+// Sum balance (patterns 1 & 3):  Σ D = Σ B  ⇔  F = G
+//   Σ D = Σ(A | C even) + Σ(B | C even) and Σ B = Σ(B | C even) + Σ(B | C odd),
+//   so Σ D = Σ B exactly when Σ(A | C even) = Σ(B | C odd), i.e. F = G.
+//   Σ E = Σ A goes with it, because Σ D + Σ E = Σ A + Σ B always.
 //
-// Parity balance (patterns 2 & 4): H = J
-//   C is even exactly when A and B share parity, so COUNT(C even) = H + K.
-//   There are always 57 odd surah numbers, so J + K = 57, hence H + K = 57  ⇔  H = J.
-//   I = 57 - H and K = 57 - J are then fixed as well.
+// Parity balance (patterns 2 & 4):  COUNT(C even) = COUNT(C odd)  ⇔  H = J (and I = K)
+//   C is even exactly when A and B share parity, so COUNT(C even) = H + K and COUNT(C odd) = I + J.
+//   There are always 57 even and 57 odd surah numbers (H + I = 57, J + K = 57),
+//   so H + K = I + J exactly when H = J, and then I = K as well.
 export const CORE_FACTS = {
   sumBalance: {
     title: 'Sum Balance',
-    statement: 'Σ(A where A+B is even) = Σ(B where A+B is odd)',
     patterns: ['pattern1', 'pattern3'] as const
   },
   parityBalance: {
     title: 'Parity Balance',
-    statement: 'COUNT(A even, B even) = COUNT(A odd, B even)',
     patterns: ['pattern2', 'pattern4'] as const
   }
 } as const

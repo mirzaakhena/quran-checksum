@@ -35,7 +35,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           currentValue: formatPattern1(results.evenTotalSum, results.oddTotalSum),
           expectedValue: EXPECTED_LABELS.pattern1,
           isValid: validation.pattern1,
-          explanation: `Core fact "${CORE_FACTS.sumBalance.title}". Σ(A+B where even) is Σ(A where even) + Σ(B where even), so it equals the total verse count exactly when Σ(A where A+B even) = Σ(B where A+B odd), which is F = G in Pattern 3 (currently F = ${F}, G = ${G}). The odd group then equals 6555 automatically, because the two groups together always add up to 6555 + 6236.`
+          explanation: `Core fact "${CORE_FACTS.sumBalance.title}": Pattern 1 holds exactly when Pattern 3 does. The even group of A+B is Σ(A where even) + Σ(B where even), and the total verse count is Σ(B where even) + Σ(B where odd), so the two are equal exactly when F = G (currently F = ${F}, G = ${G}). The odd group then equals 6555, because the two groups together always add up to 6555 + 6236.`
         }
 
       case 'pattern2':
@@ -46,7 +46,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           currentValue: formatPattern2(results.evenTotalCount, results.oddTotalCount),
           expectedValue: EXPECTED_LABELS.pattern2,
           isValid: validation.pattern2,
-          explanation: `Core fact "${CORE_FACTS.parityBalance.title}". A+B is even exactly when A and B are both even (H) or both odd (K). Since there are always 57 odd surah numbers (J + K = 57), the 57:57 split holds exactly when H = J (currently H = ${H}, J = ${J}).`
+          explanation: `Core fact "${CORE_FACTS.parityBalance.title}": Pattern 2 holds exactly when Pattern 4 does. A+B is even exactly when A and B are both even (H) or both odd (K). Since there are always 57 even and 57 odd surah numbers, the 57:57 split holds exactly when H = J (currently H = ${H}, J = ${J}), and then I = K as well.`
         }
 
       case 'pattern3':
@@ -57,7 +57,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           currentValue: F === G ? String(F) : `${F}/${G}`,
           expectedValue: EXPECTED_LABELS.pattern3,
           isValid: validation.pattern3,
-          explanation: `Core fact "${CORE_FACTS.sumBalance.title}". F = G is the same statement as Pattern 1; this pattern adds only the specific value 3303.`
+          explanation: `Core fact "${CORE_FACTS.sumBalance.title}": Pattern 3 holds exactly when Pattern 1 does. F = G means the even group of A+B (F plus Σ(B where even)) equals the total verse count (G plus Σ(B where even)), which is Pattern 1. Here both sides come to 3303.`
         }
 
       case 'pattern4':
@@ -68,7 +68,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
           currentValue: formatPattern4(H, results.evenSurahOddVerses, J, results.oddSurahOddVerses),
           expectedValue: EXPECTED_LABELS.pattern4,
           isValid: validation.pattern4,
-          explanation: `Core fact "${CORE_FACTS.parityBalance.title}". There are always 57 even and 57 odd surah numbers, so H + I = 57 and J + K = 57: once H and J are known, I and K follow. The symmetry H = J is the same statement as Pattern 2; this pattern adds only the specific value H = J = 30 (60 surahs with an even verse count).`
+          explanation: `Core fact "${CORE_FACTS.parityBalance.title}": Pattern 4 holds exactly when Pattern 2 does. There are always 57 even and 57 odd surah numbers, so H + I = 57 and J + K = 57. The surahs with an even A+B are H + K and those with an odd A+B are I + J, so H = J (and I = K) is the same as the 57:57 split of Pattern 2. Here H = J = 30 and I = K = 27.`
         }
 
       case 'surah-numbers':

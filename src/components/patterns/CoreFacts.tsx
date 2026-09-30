@@ -1,5 +1,5 @@
 import { PatternResults, PatternValidation } from '../../v2/types';
-import { CORE_FACTS, EXPECTED_LABELS, checkCoreFacts, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core';
+import { CORE_FACTS, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core';
 
 interface CoreFactsProps {
   results: PatternResults;
@@ -15,25 +15,13 @@ interface PatternCard {
   borderClass: string;
 }
 
-interface FactGroup {
-  title: string;
-  statement: string;
-  holds: boolean;
-  why: string;
-  cards: PatternCard[];
-}
-
 export function CoreFacts({ results, validation }: CoreFactsProps) {
-  const holds = checkCoreFacts(results);
   const F = results.chapterSumIfEvenTotal;
   const G = results.verseSumIfOddTotal;
 
-  const groups: FactGroup[] = [
+  const groups: { title: string; cards: PatternCard[] }[] = [
     {
       title: CORE_FACTS.sumBalance.title,
-      statement: CORE_FACTS.sumBalance.statement,
-      holds: holds.sumBalance,
-      why: 'Pattern 1 and Pattern 3 are two views of this one fact. Σ(A+B where even) equals the total verse count exactly when F = G; the odd group then equals the sum of surah numbers automatically.',
       cards: [
         {
           name: 'Pattern 1',
@@ -55,9 +43,6 @@ export function CoreFacts({ results, validation }: CoreFactsProps) {
     },
     {
       title: CORE_FACTS.parityBalance.title,
-      statement: CORE_FACTS.parityBalance.statement,
-      holds: holds.parityBalance,
-      why: 'Pattern 2 and Pattern 4 are two views of this one fact. A+B is even when A and B share parity, so the 57:57 split holds exactly when H = J; Pattern 4 adds the specific value H = 30, and I and K follow from it.',
       cards: [
         {
           name: 'Pattern 2',
@@ -80,25 +65,21 @@ export function CoreFacts({ results, validation }: CoreFactsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       {groups.map((group) => (
         <section key={group.title} className="bg-white/60 rounded-lg p-4 shadow-sm">
-          <h2 className="text-xl font-bold text-gray-900">
-            Core Fact: {group.title} {group.holds ? '✅' : '❌'}
-          </h2>
-          <code className="block text-sm bg-gray-100 rounded px-2 py-1 mt-2">{group.statement}</code>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed">{group.why}</p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          <h2 className="text-xl font-bold text-gray-900">{group.title}</h2>
+          <div className="space-y-3 mt-3">
             {group.cards.map((card) => (
-              <div key={card.name} className={`bg-white rounded-lg shadow-md p-4 border-l-4 flex flex-col ${card.borderClass}`}>
+              <div key={card.name} className={`bg-white rounded-lg shadow-md px-4 py-3 border-l-4 ${card.borderClass}`}>
                 <h3 className="font-bold text-lg text-gray-900">
                   {card.name}: <span className="tabular-nums">{card.value}</span>
                 </h3>
-                <p className="text-gray-600 text-sm mt-2">{card.formula}</p>
-                <p className={`text-sm font-semibold mt-auto pt-3 ${card.valid ? 'text-green-600' : 'text-red-600'}`}>
-                  {card.valid ? '✅ Validated' : `❌ Expected ${card.expected}`}
-                </p>
+                {/* Kept on one line on wide screens; allowed to wrap on narrow ones */}
+                <p className="text-gray-600 text-sm mt-1 md:whitespace-nowrap">{card.formula}</p>
+                {!card.valid && (
+                  <p className="text-sm font-semibold text-red-600 mt-1">❌ Expected {card.expected}</p>
+                )}
               </div>
             ))}
           </div>
