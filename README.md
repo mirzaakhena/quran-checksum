@@ -4,24 +4,6 @@ I have found a remarkable mathematical pattern in the Quran that anyone can veri
 
 **🔎 Explore it live: [mirzaakhena.github.io/quran-checksum/natural-patterns](https://mirzaakhena.github.io/quran-checksum/natural-patterns)**
 
-## Not the Conventional Patterns
-
-This finding is different from the patterns that are already well known:
-
-**The Number 19 Pattern** — its proof is complex and easily dismissed as numerology.
-
-**Balance in Word Occurrences:**
-* Al-Hayah (life) and al-Mawt (death): 145 times each
-* An-Naf' (benefit) and al-Madharrah (harm): 50 times each
-* Al-Harr (heat) and al-Bard (cold): 4 times each
-* Ath-Thuma'ninah (tranquility) and adh-Dhik (distress): 13 times each
-
-**Notable Statistics:**
-* The word 'day': 365 times; the word 'month': 30 times
-* The ratio of "bahr" (sea) to "barr" (land): 71.1% vs 28.9% — matching the ratio of water to land on Earth
-
-Without diminishing those wonders, the patterns above all require a knowledge of Arabic to verify.
-
 ## The Quran Checksum: A Miracle You Can Verify Directly
 
 I call this finding the "Quran Checksum" because it focuses on the most basic structure: the surah number and the verse count. This pattern is **IMPOSSIBLE** for a human to have constructed under the historical conditions described below.
