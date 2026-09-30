@@ -1,5 +1,6 @@
 import { TableHeaderProps } from './types'
 import { formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core'
+import { DownloadExcelButton } from '../ui'
 
 export default function TableHeader({
   validation,
@@ -14,6 +15,10 @@ export default function TableHeader({
       <div className="bg-gradient-to-r from-quran-blue to-indigo-600 text-white p-4">
         <h3 className="text-xl font-bold text-center">Interactive Pattern Explorer</h3>
         <p className="text-center text-blue-100 mt-1">Click headers for formulas • Click cells for calculations • Hover for details</p>
+        <div className="flex flex-col items-center gap-1 mt-3">
+          <DownloadExcelButton />
+          <p className="text-xs text-blue-100">Same columns as below, with live formulas, so you can check every number yourself</p>
+        </div>
       </div>
 
       {/* Pattern Summary Bar - Sticky */}

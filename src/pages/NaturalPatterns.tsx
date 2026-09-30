@@ -32,7 +32,8 @@ export default function NaturalPatterns() {
           These patterns are called "natural" because they use only the surah number and the verse
           count, with simple even/odd splits and sums, and no tolerances or extra constants. Every
           value can be checked with a spreadsheet: click a column header or a total in the table
-          below to see how it is calculated and which core fact it belongs to.
+          below to see how it is calculated and which core fact it belongs to, or use the
+          "Download Excel" button to get the whole table with live formulas.
         </p>
       </div>
     </div>
