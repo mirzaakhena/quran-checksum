@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/layout'
 import NaturalPatterns from './pages/NaturalPatterns'
+import MiniQuran from './pages/MiniQuran'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/natural-patterns" replace />} />
           <Route path="/natural-patterns" element={<NaturalPatterns />} />
+          <Route path="/mini-quran" element={<MiniQuran />} />
         </Routes>
       </Layout>
     </Router>
