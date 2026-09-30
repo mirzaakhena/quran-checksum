@@ -1,126 +1,107 @@
 import { PatternResults, PatternValidation } from '../../v2/types';
-import { CORE_FACTS, checkCoreFacts } from '../../v2/core';
+import { CORE_FACTS, EXPECTED_LABELS, checkCoreFacts, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core';
 
 interface CoreFactsProps {
   results: PatternResults;
   validation: PatternValidation;
 }
 
-interface FactRow {
-  pattern: string;
-  claim: string;
+interface PatternCard {
+  name: string;
   value: string;
+  expected: string;
+  formula: string;
   valid: boolean;
+  borderClass: string;
 }
 
-interface Fact {
+interface FactGroup {
   title: string;
   statement: string;
   holds: boolean;
-  headline: string;
-  headlineLabel: string;
-  rows: FactRow[];
   why: string;
+  cards: PatternCard[];
 }
-
-const Check = ({ ok }: { ok: boolean }) => (
-  <span className={ok ? 'text-green-600' : 'text-red-600'} aria-label={ok ? 'holds' : 'does not hold'}>
-    {ok ? '✓' : '✗'}
-  </span>
-);
 
 export function CoreFacts({ results, validation }: CoreFactsProps) {
   const holds = checkCoreFacts(results);
   const F = results.chapterSumIfEvenTotal;
   const G = results.verseSumIfOddTotal;
-  const H = results.evenSurahEvenVerses;
-  const I = results.evenSurahOddVerses;
-  const J = results.oddSurahEvenVerses;
-  const K = results.oddSurahOddVerses;
 
-  const facts: Fact[] = [
+  const groups: FactGroup[] = [
     {
       title: CORE_FACTS.sumBalance.title,
-      statement: 'Surah numbers where A+B is even add up to the same total as verse counts where A+B is odd.',
+      statement: CORE_FACTS.sumBalance.statement,
       holds: holds.sumBalance,
-      headline: `${F} = ${G}`,
-      headlineLabel: 'Pattern 3 · Σ column F = Σ column G',
-      rows: [
+      why: 'Pattern 1 and Pattern 3 are two views of this one fact. Σ(A+B where even) equals the total verse count exactly when F = G; the odd group then equals the sum of surah numbers automatically.',
+      cards: [
         {
-          pattern: 'Pattern 1',
-          claim: 'Σ even A+B = all verses (D = B)',
-          value: `${results.evenTotalSum} = ${results.sumVerseCounts}`,
-          valid: validation.pattern1
+          name: 'Pattern 1',
+          value: formatPattern1(results.evenTotalSum, results.oddTotalSum).replace('/', ' / '),
+          expected: EXPECTED_LABELS.pattern1,
+          formula: 'Σ(A+B even) = Σ verses, Σ(A+B odd) = Σ surah numbers',
+          valid: validation.pattern1,
+          borderClass: 'border-pattern-1-even'
         },
         {
-          pattern: 'Pattern 1',
-          claim: 'Σ odd A+B = Σ surah numbers (E = A)',
-          value: `${results.oddTotalSum} = ${results.sumSurahNumbers}`,
-          valid: validation.pattern1
+          name: 'Pattern 3',
+          value: F === G ? String(F) : `${F} / ${G}`,
+          expected: EXPECTED_LABELS.pattern3,
+          formula: 'F = Σ(A where A+B even), G = Σ(B where A+B odd)',
+          valid: validation.pattern3,
+          borderClass: 'border-pattern-3-highlight'
         }
-      ],
-      why: 'Σ(A+B where even) is Σ(A where even) + Σ(B where even). That equals all verses exactly when Σ(A where even) = Σ(B where odd), which is F = G. The odd group then equals the sum of surah numbers automatically, because both groups together always add up to Σ A + Σ B.'
+      ]
     },
     {
       title: CORE_FACTS.parityBalance.title,
-      statement: 'As many even-numbered surahs have an even verse count as odd-numbered surahs do.',
+      statement: CORE_FACTS.parityBalance.statement,
       holds: holds.parityBalance,
-      headline: `${H} = ${J}`,
-      headlineLabel: 'Pattern 4 · count of column H = count of column J',
-      rows: [
+      why: 'Pattern 2 and Pattern 4 are two views of this one fact. A+B is even when A and B share parity, so the 57:57 split holds exactly when H = J; Pattern 4 adds the specific value H = 30, and I and K follow from it.',
+      cards: [
         {
-          pattern: 'Pattern 4',
-          claim: 'even-odd = odd-odd (I = K)',
-          value: `${I} = ${K}`,
-          valid: validation.pattern4
+          name: 'Pattern 2',
+          value: formatPattern2(results.evenTotalCount, results.oddTotalCount).replace(':', ' : '),
+          expected: EXPECTED_LABELS.pattern2,
+          formula: 'Surahs with even (A+B) : odd (A+B)',
+          valid: validation.pattern2,
+          borderClass: 'border-pattern-1-odd'
         },
         {
-          pattern: 'Pattern 2',
-          claim: 'surahs with even A+B : odd A+B',
-          value: `${results.evenTotalCount} : ${results.oddTotalCount}`,
-          valid: validation.pattern2
+          name: 'Pattern 4',
+          value: formatPattern4(results.evenSurahEvenVerses, results.evenSurahOddVerses, results.oddSurahEvenVerses, results.oddSurahOddVerses),
+          expected: EXPECTED_LABELS.pattern4,
+          formula: 'COUNT of H (even-even), I (even-odd), J (odd-even), K (odd-odd)',
+          valid: validation.pattern4,
+          borderClass: 'border-pattern-4-combo1'
         }
-      ],
-      why: 'A+B is even exactly when A and B are both even (H) or both odd (K). There are always 57 odd surah numbers, so J + K = 57, and the 57 : 57 split holds exactly when H = J. With 57 even surah numbers as well, I = K follows too.'
+      ]
     }
   ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {facts.map((fact) => (
-        <section key={fact.title} className="bg-white rounded-lg shadow-md p-5 flex flex-col">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-bold text-gray-900">{fact.title}</h2>
-            <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${
-              fact.holds ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-            }`}>
-              {fact.holds ? '✓ Holds' : '✗ Does not hold'}
-            </span>
-          </div>
-          <p className="text-gray-600 mt-2">{fact.statement}</p>
+      {groups.map((group) => (
+        <section key={group.title} className="bg-white/60 rounded-lg p-4 shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900">
+            Core Fact: {group.title} {group.holds ? '✅' : '❌'}
+          </h2>
+          <code className="block text-sm bg-gray-100 rounded px-2 py-1 mt-2">{group.statement}</code>
+          <p className="text-sm text-gray-600 mt-2 leading-relaxed">{group.why}</p>
 
-          <div className="my-5 text-center">
-            <div className="text-4xl font-bold text-gray-900 tabular-nums">{fact.headline}</div>
-            <div className="text-sm text-gray-500 mt-1">{fact.headlineLabel}</div>
-          </div>
-
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Which also gives</div>
-          <ul className="divide-y border rounded-md text-sm">
-            {fact.rows.map((row) => (
-              <li key={row.claim} className="flex flex-wrap items-center gap-x-3 gap-y-0.5 px-3 py-2">
-                <span className="font-semibold text-gray-700 whitespace-nowrap">{row.pattern}</span>
-                {/* On narrow screens the claim drops to its own line below the value */}
-                <span className="text-gray-600 order-last basis-full sm:order-none sm:basis-auto sm:flex-1">{row.claim}</span>
-                <span className="font-mono tabular-nums text-gray-900 whitespace-nowrap ml-auto sm:ml-0">{row.value}</span>
-                <Check ok={row.valid} />
-              </li>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            {group.cards.map((card) => (
+              <div key={card.name} className={`bg-white rounded-lg shadow-md p-4 border-l-4 flex flex-col ${card.borderClass}`}>
+                <h3 className="font-bold text-lg text-gray-900">
+                  {card.name}: <span className="tabular-nums">{card.value}</span>
+                </h3>
+                <p className="text-gray-600 text-sm mt-2">{card.formula}</p>
+                <p className={`text-sm font-semibold mt-auto pt-3 ${card.valid ? 'text-green-600' : 'text-red-600'}`}>
+                  {card.valid ? '✅ Validated' : `❌ Expected ${card.expected}`}
+                </p>
+              </div>
             ))}
-          </ul>
-
-          <details className="mt-4 text-sm text-gray-600">
-            <summary className="cursor-pointer text-quran-blue font-medium">Why is this one fact, not several?</summary>
-            <p className="mt-2 leading-relaxed">{fact.why}</p>
-          </details>
+          </div>
         </section>
       ))}
     </div>
