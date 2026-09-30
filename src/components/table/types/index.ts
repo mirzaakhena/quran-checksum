@@ -22,8 +22,11 @@ export interface TableState {
 
 export interface TableColumnHeadersProps {
   columns: TableColumn[]
-  onHeaderClick: (columnId: string) => void
+  // Omit to render the headers without click behaviour
+  onHeaderClick?: (columnId: string) => void
   getPatternHighlight: (columnId: string) => string
+  firstColumnLabel?: string
+  firstColumnClassName?: string
 }
 
 export interface TableRowProps {
@@ -46,7 +49,8 @@ export interface TableFooterProps {
   getColumnTotal: (columnId: string) => number
   getColumnCount: (columnId: string) => number
   getPatternHighlight: (columnId: string) => string
-  onPatternSelect: (pattern: string) => void
+  // Omit to render the totals without click behaviour
+  onPatternSelect?: (pattern: string) => void
 }
 
 export interface TableControlsProps {

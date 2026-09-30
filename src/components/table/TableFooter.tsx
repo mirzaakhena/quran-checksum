@@ -9,6 +9,8 @@ export default function TableFooter({
   getPatternHighlight,
   onPatternSelect
 }: TableFooterProps) {
+  const interactive = onPatternSelect !== undefined
+
   const getFooterColorClass = (columnId: string): string => {
     switch (columnId) {
       case 'A':
@@ -60,16 +62,16 @@ export default function TableFooter({
             <td
               key={col.id}
               className={`
-                p-1 text-center cursor-pointer transition-all duration-200
-                hover:bg-gray-200 active:bg-gray-300 text-xs
+                p-1 text-center transition-all duration-200 text-xs
+                ${interactive ? 'cursor-pointer hover:bg-gray-200 active:bg-gray-300' : ''}
                 ${getFooterColorClass(col.id)}
                 ${getPatternHighlight(col.id)}
               `}
               onClick={() => {
                 const pattern = getPatternFromColumnId(col.id)
-                if (pattern) onPatternSelect(pattern)
+                if (pattern) onPatternSelect?.(pattern)
               }}
-              title={`
+              title={!interactive ? undefined : `
                 ${['C', 'H', 'I', 'J', 'K'].includes(col.id) 
                   ? (col.id === 'C' 
                       ? 'Sum not displayed (derived value)' 
@@ -100,19 +102,19 @@ export default function TableFooter({
             <td
               key={`count-${col.id}`}
               className={`
-                p-1 text-center cursor-pointer transition-all duration-200
-                hover:bg-gray-200 active:bg-gray-300 text-xs
+                p-1 text-center transition-all duration-200 text-xs
+                ${interactive ? 'cursor-pointer hover:bg-gray-200 active:bg-gray-300' : ''}
                 ${getCountColorClass(col.id)}
                 ${getPatternHighlight(col.id)}
               `}
               onClick={() => {
                 if (col.id === 'D' || col.id === 'E') {
-                  onPatternSelect('pattern2')
+                  onPatternSelect?.('pattern2')
                 } else if (['H', 'I', 'J', 'K'].includes(col.id)) {
-                  onPatternSelect('pattern4')
+                  onPatternSelect?.('pattern4')
                 }
               }}
-              title={`
+              title={!interactive ? undefined : `
                 ${isCountRelevant 
                   ? `Count of non-empty values in column ${col.id}: ${count}\n${
                       ['D', 'E'].includes(col.id) 
