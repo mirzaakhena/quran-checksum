@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { MAX_SURAHS, MIN_SURAHS } from '../v2/core';
+import { MAX_SURAHS, MAX_VERSES, MIN_SURAHS, MIN_VERSES } from '../v2/core';
 import { quranData } from '../v2/data';
 
 const STORAGE_KEY = 'mini-quran-book-v3';
+const DEFAULT_SURAH_COUNT = 10;
 
 export interface MiniQuranBook {
   surahCount: number;
@@ -36,7 +37,7 @@ function saveBook(book: MiniQuranBook) {
 }
 
 export function useMiniQuranBook() {
-  const [book, setBook] = useState<MiniQuranBook>(() => loadBook() ?? emptyBook(quranData.length));
+  const [book, setBook] = useState<MiniQuranBook>(() => loadBook() ?? emptyBook(DEFAULT_SURAH_COUNT));
 
   const update = (next: MiniQuranBook) => {
     setBook(next);
@@ -58,7 +59,14 @@ export function useMiniQuranBook() {
   const fillWithQuran = () =>
     update({ surahCount: quranData.length, entries: quranData.map((s) => String(s.verseCount)) });
 
+  // Every surah gets a whole number of verses drawn uniformly from the allowed range
+  const fillRandom = () =>
+    update({
+      ...book,
+      entries: book.entries.map(() => String(MIN_VERSES + Math.floor(Math.random() * (MAX_VERSES - MIN_VERSES + 1))))
+    });
+
   const clear = () => update(emptyBook(book.surahCount));
 
-  return { book, setSurahCount, setEntry, fillWithQuran, clear };
+  return { book, setSurahCount, setEntry, fillWithQuran, fillRandom, clear };
 }

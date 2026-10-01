@@ -5,10 +5,11 @@ interface MiniQuranControlsProps {
   surahCount: number;
   onSurahCountChange: (surahCount: number) => void;
   onFillWithQuran: () => void;
+  onFillRandom: () => void;
   onClear: () => void;
 }
 
-export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQuran, onClear }: MiniQuranControlsProps) {
+export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQuran, onFillRandom, onClear }: MiniQuranControlsProps) {
   const [draft, setDraft] = useState(String(surahCount));
   useEffect(() => setDraft(String(surahCount)), [surahCount]);
 
@@ -46,6 +47,13 @@ export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQu
         className="border border-gray-300 text-gray-700 font-semibold rounded-lg px-4 py-1.5 hover:bg-gray-50"
       >
         Fill with the Quran's verse counts
+      </button>
+      <button
+        type="button"
+        onClick={onFillRandom}
+        className="border border-gray-300 text-gray-700 font-semibold rounded-lg px-4 py-1.5 hover:bg-gray-50"
+      >
+        Fill with random verse counts
       </button>
       <button
         type="button"

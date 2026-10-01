@@ -5,7 +5,7 @@ import { PatternStatus } from '../components/miniQuran/PatternStatus'
 import { useMiniQuranBook } from '../hooks/useMiniQuranBook'
 
 export default function MiniQuran() {
-  const { book, setSurahCount, setEntry, fillWithQuran, clear } = useMiniQuranBook()
+  const { book, setSurahCount, setEntry, fillWithQuran, fillRandom, clear } = useMiniQuranBook()
 
   return (
     <div className="space-y-6">
@@ -47,6 +47,7 @@ export default function MiniQuran() {
         surahCount={book.surahCount}
         onSurahCountChange={setSurahCount}
         onFillWithQuran={fillWithQuran}
+        onFillRandom={fillRandom}
         onClear={clear}
       />
 
