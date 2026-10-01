@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
+import { DOCS } from '../../docs'
 
 const GITHUB_PROFILE_URL = 'https://github.com/mirzaakhena'
 const GITHUB_REPO_URL = `${GITHUB_PROFILE_URL}/quran-checksum`
@@ -12,7 +13,8 @@ const GitHubIcon = () => (
 
 const NAV_ITEMS = [
   { to: '/natural-patterns', label: 'The Checksum' },
-  { to: '/mini-quran', label: 'Mini Quran Challenge' }
+  { to: '/mini-quran', label: 'Mini Quran Challenge' },
+  ...DOCS.map((doc) => ({ to: `/${doc.slug}`, label: doc.label }))
 ]
 
 interface LayoutProps {
@@ -31,7 +33,7 @@ export default function Layout({ children }: LayoutProps) {
             <p className="text-gray-600 mt-1">
               Two facts hidden in the surah numbers and verse counts of the Quran, which you can check yourself.
             </p>
-            <nav className="flex gap-4 mt-3 text-sm font-medium">
+            <nav className="flex flex-wrap gap-x-4 gap-y-2 mt-3 text-sm font-medium">
               {NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.to}
