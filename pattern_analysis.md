@@ -75,12 +75,33 @@ So **Pattern 1 holds if and only if F = G**. Pattern 3 adds only the specific va
 
 ### Core Fact 2, Parity Balance: H = J (Patterns 2 and 4)
 
-- A + B is even exactly when A and B have the same parity, so COUNT(A+B even) = H + K.
-- There are always 57 odd surah numbers, so J + K = 57.
-- Therefore the 57 : 57 split holds **if and only if H = J**.
-- There are always 57 even surah numbers too (H + I = 57), so once H = J, I = K follows.
+Pattern 2 and Pattern 4 always hold or fail together. The proof works for any **even** number of surahs, N = 2m (for the Quran, N = 114 and m = 57).
 
-So **Pattern 2 holds if and only if H = J**. Pattern 4 adds only the specific value H = 30.
+**Setup.** Every surah falls into one of four cells, by the parity of its surah number A and its verse count B:
+
+| | B even | B odd |
+|---|---|---|
+| **A even** | H | I |
+| **A odd** | J | K |
+
+Two facts hold whatever the verse counts are:
+
+1. **The surah numbers 1 to N contain m even and m odd numbers**, so each row holds m surahs: H + I = m and J + K = m.
+2. **A + B is even exactly when A and B have the same parity** (even + even or odd + odd), so the surahs with an even A + B are the diagonal cells, **H + K**, and those with an odd A + B are the other two, **I + J**.
+
+**Pattern 2 ⇒ Pattern 4.** Pattern 2 says that as many surahs have an even A + B as an odd one:
+
+- H + K = I + J
+- Substituting I = m − H and K = m − J (fact 1): H + (m − J) = (m − H) + J, so 2H = 2J and **H = J**.
+- Then I = m − H = m − J = **K**.
+
+**Pattern 4 ⇒ Pattern 2.** If H = J and I = K, then H + K = J + I, which is Pattern 2.
+
+**With the Quran's numbers** (m = 57): H = 30, I = 27, J = 30, K = 27. Each row adds up to 57, and the even A + B group has H + K = 30 + 27 = 57 surahs while the odd group has I + J = 27 + 30 = 57.
+
+So **Pattern 2 holds if and only if H = J (and I = K)**. Pattern 4 adds only the specific value H = 30: Pattern 2 alone would also allow, for example, 31-26-31-26. Equivalently, it adds that exactly 60 surahs have an even verse count (H + J = 60).
+
+**With an odd number of surahs** neither pattern can hold: an odd number of surahs cannot split into two equal halves (Pattern 2), and the bottom row has one more surah than the top row, so H = J and I = K cannot both be true (Pattern 4).
 
 ### Why this matters
 
