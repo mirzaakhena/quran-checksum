@@ -34,7 +34,7 @@ const COLUMNS: {
     formula: r => `IF(MOD(C${r},2)=0,C${r},"")`, result: (A, B) => isEven(A + B) ? A + B : '' },
   { key: 'E', header: 'E: Odd (A+B)', width: 11, fill: 'D1FAE5',
     formula: r => `IF(MOD(C${r},2)=1,C${r},"")`, result: (A, B) => !isEven(A + B) ? A + B : '' },
-  { key: 'F', header: 'F: Chapter if Even', width: 11, fill: 'ECFDF5',
+  { key: 'F', header: 'F: Surah if Even', width: 11, fill: 'ECFDF5',
     formula: r => `IF(MOD(C${r},2)=0,A${r},"")`, result: (A, B) => isEven(A + B) ? A : '' },
   { key: 'G', header: 'G: Verses if Odd', width: 11, fill: 'FEF9C3',
     formula: r => `IF(MOD(C${r},2)=1,B${r},"")`, result: (A, B) => !isEven(A + B) ? B : '' },

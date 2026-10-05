@@ -7,7 +7,7 @@ export const createTableColumns = (): TableColumn[] => [
   { id: 'C', label: 'C', description: 'A + B', formula: 'Surah number + verse count', className: 'bg-blue-50 w-16' },
   { id: 'D', label: 'D', description: 'Even (A+B)', formula: 'IF(A+B is even, A+B, "")', className: 'bg-pattern-1-even/20 w-16' },
   { id: 'E', label: 'E', description: 'Odd (A+B)', formula: 'IF(A+B is odd, A+B, "")', className: 'bg-pattern-1-odd/20 w-16' },
-  { id: 'F', label: 'F', description: 'Chapter if Even', formula: 'IF(A+B is even, A, "")', className: 'bg-green-50 w-12' },
+  { id: 'F', label: 'F', description: 'Surah if Even', formula: 'IF(A+B is even, A, "")', className: 'bg-green-50 w-12' },
   { id: 'G', label: 'G', description: 'Verses if Odd', formula: 'IF(A+B is odd, B, "")', className: 'bg-yellow-50 w-12' },
   { id: 'H', label: 'H', description: 'Even-Even', formula: 'IF(A even AND B even, ✓, "")', className: 'bg-pattern-4-combo1/20 w-10' },
   { id: 'I', label: 'I', description: 'Even-Odd', formula: 'IF(A even AND B odd, ✓, "")', className: 'bg-pattern-4-combo2/20 w-10' },

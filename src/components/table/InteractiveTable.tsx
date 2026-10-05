@@ -36,6 +36,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             columns={columns}
             onHeaderClick={handleHeaderClick}
             getPatternHighlight={wrappedGetPatternHighlight}
+            firstColumnLabel="Surah Name"
           />
 
           <tbody>

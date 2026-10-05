@@ -43,17 +43,35 @@ export default function NaturalPatterns() {
 
       <InteractiveTable />
 
+      <section className="text-gray-700 leading-relaxed space-y-3">
+        <h2 className="text-2xl font-bold text-gray-900">Why is this surprising?</h2>
+        <p>
+          Now look at the bottom of the table, at the TOTAL row. Column B, the verse counts, adds up
+          to <strong>6236</strong>, and column A, the surah numbers, adds up to <strong>6555</strong>. Next to
+          them, columns D and E split the surahs by whether A + B is even or odd, and they add up
+          to <strong>6236</strong> and <strong>6555</strong> as well. How can the even group come out at exactly
+          the number of verses in the whole Quran, and the odd group at exactly the sum of all surah numbers?
+          Nothing ties a surah's position in the book to its length: the verse counts run 7, 286, 200, 176, …
+          with no visible rule. And that is not all. In the COUNT row, the even and odd groups hold
+          exactly <strong>57</strong> surahs each, half of 114. Columns F and G, which take the surah number from
+          one group and the verse count from the other, both add up to <strong>3303</strong>. Columns H to K,
+          which sort the surahs by whether A and B are each even or odd, count <strong>30, 27, 30, 27</strong>.
+          For a text revealed piece by piece over 23 years and numbered only later, this looks like a very
+          strange coincidence. But is it? The note below looks at that question.
+        </p>
+      </section>
+
       <section className="bg-amber-50 border border-amber-200 rounded-lg p-5 text-sm text-gray-700 leading-relaxed">
-        <h2 className="font-bold text-gray-900 text-base">Disclaimer: this is not a true checksum</h2>
+        <h2 className="font-bold text-gray-900 text-base">Before you conclude: this is not a true checksum</h2>
         <p className="mt-2">
           A real checksum locks the data: changing any single value breaks it. These patterns do not work
-          that way. For example, if Al-Fatihah had 9 verses instead of 7, all four balances would still hold:
-          the verse total would become 6238, and so would the even group of A + B, while 57 : 57, 3303 and
-          30-27-30-27 would not change at all.
+          that way. For example, if Al-Fatihah had 9 verses instead of 7, all four patterns would still hold:
+          column B and column D would both become 6238, while 57 : 57, 3303 and 30-27-30-27 would not change
+          at all.
         </p>
         <p className="mt-2">
           In general, adding or removing an even number of verses in any of the 57 surahs whose A + B is even
-          keeps every balance. About 1 in 4 of all possible single-surah changes (to any count from 1 to 300)
+          keeps every pattern. About 1 in 4 of all possible single-surah changes (to any count from 1 to 300)
           goes undetected. Changing one of the other 57 surahs, or changing a count by an odd number, does
           break the patterns.
         </p>
