@@ -76,7 +76,7 @@ export default function DocPage({ doc }: DocPageProps) {
         </a>{' '}
         {t.docs.onGithub}
       </p>
-      <article className="bg-white rounded-lg shadow-md p-5 sm:p-8 prose prose-slate max-w-none prose-headings:scroll-mt-4 prose-table:my-0 prose-code:before:content-none prose-code:after:content-none">
+      <article className="bg-white rounded-lg shadow-md p-5 sm:p-8 prose prose-slate max-w-none prose-headings:scroll-mt-16 prose-table:my-0 prose-code:before:content-none prose-code:after:content-none">
         {content === null ? (
           <p className="text-gray-500">{t.docs.loading}</p>
         ) : (

@@ -10,7 +10,7 @@ export default function TableColumnHeaders({
 }: TableColumnHeadersProps) {
   const t = useT()
   return (
-    <thead className="bg-gray-100 border-b-2 md:sticky md:top-0 md:z-40 md:shadow-md md:backdrop-blur-sm md:bg-gray-100/95">
+    <thead className="bg-gray-100 border-b-2 md:sticky md:top-12 md:z-40 md:shadow-md md:backdrop-blur-sm md:bg-gray-100/95">
       <tr>
         <th className={`p-1 pl-2 text-left text-xs font-semibold md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm md:shadow-sm ${firstColumnClassName}`}>
           {firstColumnLabel ?? t.table.surah}

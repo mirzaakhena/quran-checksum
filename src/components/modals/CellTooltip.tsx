@@ -137,7 +137,7 @@ export default function CellTooltip({ column, surah, value, formula, mousePositi
 
   return (
     <div 
-      className="fixed z-50 pointer-events-none transition-all duration-75 ease-out"
+      className="fixed z-[70] pointer-events-none transition-all duration-75 ease-out"
       style={{
         left: `${tooltipPosition.x}px`,
         top: `${tooltipPosition.y}px`,

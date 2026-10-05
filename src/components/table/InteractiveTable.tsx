@@ -29,7 +29,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
   const displayedData = tableState.showAllRows ? quranData : quranData.slice(0, 20)
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg shadow-lg overflow-hidden md:overflow-visible ${className}`}>
       <TableHeader />
 
       <div className="w-full overflow-x-auto md:overflow-x-visible">

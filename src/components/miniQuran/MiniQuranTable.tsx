@@ -23,7 +23,7 @@ export function MiniQuranTable({ entries, onEntryChange }: MiniQuranTableProps) 
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden md:overflow-visible">
       <div className="w-full overflow-x-auto md:overflow-x-visible">
         <table className="w-full text-sm table-fixed min-w-[800px] md:min-w-full">
           <TableColumnHeaders

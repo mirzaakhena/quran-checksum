@@ -48,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-sm border-b-2 border-quran-gold">
+      <header className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -57,35 +57,43 @@ export default function Layout({ children }: LayoutProps) {
             <p className="text-gray-600 mt-1">
               {t.layout.subtitle}
             </p>
-            <nav className="flex flex-wrap gap-x-4 gap-y-2 mt-3 text-sm font-medium">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    isActive ? 'text-quran-blue border-b-2 border-quran-blue pb-0.5' : 'text-gray-600 hover:text-gray-900 pb-0.5'
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
           </div>
-          <div className="shrink-0 flex items-center gap-2">
-            <LanguageSwitch />
-            <a
-              href={GITHUB_REPO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 hover:bg-gray-50"
-              aria-label={t.layout.githubLabel}
-            >
-              <GitHubIcon />
-              <span className="hidden sm:inline">GitHub</span>
-            </a>
-          </div>
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 hover:bg-gray-50"
+            aria-label={t.layout.githubLabel}
+          >
+            <GitHubIcon />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
         </div>
       </header>
+
+      {/* Stays at the top while scrolling; its height (h-12) is the offset of the sticky table headers */}
+      <div className="sticky top-0 z-[60] h-12 bg-white/95 backdrop-blur-sm border-b-2 border-quran-gold shadow-sm">
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center gap-3">
+          <nav className="flex-1 min-w-0 flex items-center gap-1 overflow-x-auto text-sm font-semibold [scrollbar-width:none] [mask-image:linear-gradient(to_right,black_85%,transparent)] md:[mask-image:none]">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 transition-colors ${
+                    isActive ? 'bg-quran-blue text-white shadow-sm' : 'text-gray-700 hover:bg-gray-100'
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+          <div className="shrink-0">
+            <LanguageSwitch />
+          </div>
+        </div>
+      </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
