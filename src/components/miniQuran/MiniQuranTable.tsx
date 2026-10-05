@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { MAX_VERSES, MIN_VERSES, parseVerseCount } from '../../v2/core';
 import { QuranSurah } from '../../v2/types';
 import TableColumnHeaders from '../table/TableColumnHeaders';
+import { useT } from '../../i18n/LanguageContext';
 import TableFooter from '../table/TableFooter';
 import { createTableColumns, getCellStyling, getCellValue, getColumnCount, getColumnTotal } from '../table/utils';
 
@@ -14,7 +15,8 @@ const noHighlight = () => '';
 
 // Same columns (A-K), cell styling, totals and counts as the checksum table; column B is editable
 export function MiniQuranTable({ entries, onEntryChange }: MiniQuranTableProps) {
-  const columns = useMemo(() => createTableColumns(), []);
+  const t = useT();
+  const columns = useMemo(() => createTableColumns(t.columns), [t]);
   const verseCounts = entries.map(parseVerseCount);
   const filled: QuranSurah[] = verseCounts.flatMap((verseCount, i) =>
     verseCount === null ? [] : [{ number: i + 1, verseCount }]
@@ -37,7 +39,7 @@ export function MiniQuranTable({ entries, onEntryChange }: MiniQuranTableProps) 
               return (
                 <tr key={surahNumber} className="border-b hover:bg-gray-50">
                   <td className="p-1 pl-2 truncate text-gray-700 md:sticky md:left-0 md:bg-white/95 md:z-30 border-r md:backdrop-blur-sm text-xs md:shadow-sm">
-                    Surah {surahNumber}
+                    {t.table.surahN(surahNumber)}
                   </td>
                   {columns.map((col) => {
                     if (col.id === 'B') {
@@ -50,8 +52,8 @@ export function MiniQuranTable({ entries, onEntryChange }: MiniQuranTableProps) 
                             max={MAX_VERSES}
                             value={entry}
                             onChange={(e) => onEntryChange(i, e.target.value)}
-                            aria-label={`Verses of surah ${surahNumber}`}
-                            title={invalid ? `Enter a whole number from ${MIN_VERSES} to ${MAX_VERSES}` : undefined}
+                            aria-label={t.miniQuran.versesOf(surahNumber)}
+                            title={invalid ? t.miniQuran.enterWhole(MIN_VERSES, MAX_VERSES) : undefined}
                             className={`w-full text-center text-xs tabular-nums rounded border px-1 py-0.5 ${
                               invalid ? 'border-red-400 bg-red-50 text-red-700' : 'border-gray-300'
                             }`}

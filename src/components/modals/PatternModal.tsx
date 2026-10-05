@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { PatternResults, PatternValidation } from '../../v2/types'
-import { CORE_FACTS, EXPECTED, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core'
+import { EXPECTED, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core'
+import { useT } from '../../i18n/LanguageContext'
 
 interface PatternModalProps {
   patternId: string
@@ -20,88 +21,78 @@ interface PatternInfo {
 }
 
 export default function PatternModal({ patternId, results, validation, onClose }: PatternModalProps) {
+  const t = useT()
   const F = results.chapterSumIfEvenTotal
   const G = results.verseSumIfOddTotal
   const H = results.evenSurahEvenVerses
   const J = results.oddSurahEvenVerses
 
   const getPatternInfo = (): PatternInfo => {
+    const m = t.modal
+    const values = { F, G, H, J }
     switch (patternId) {
       case 'pattern1':
         return {
-          title: 'Pattern 1: Perfect Balance',
-          description: 'Splitting A+B by parity: the even group sums to the total verse count (6236) and the odd group sums to the sum of surah numbers (6555)',
-          formula: 'Σ(A+B where even) = Σ(Verse Counts), Σ(A+B where odd) = Σ(Surah Numbers)',
+          ...m.pattern1,
           currentValue: formatPattern1(results.evenTotalSum, results.oddTotalSum),
           expectedValue: EXPECTED_LABELS.pattern1,
           isValid: validation.pattern1,
-          explanation: `Core fact "${CORE_FACTS.sumBalance.title}": Pattern 1 holds exactly when Pattern 3 does. The even group of A+B is Σ(A where even) + Σ(B where even), and the total verse count is Σ(B where even) + Σ(B where odd), so the two are equal exactly when F = G (currently F = ${F}, G = ${G}). The odd group then equals 6555, because the two groups together always add up to 6555 + 6236.`
+          explanation: m.pattern1Explanation(t.coreFacts.sumBalance, values)
         }
 
       case 'pattern2':
         return {
-          title: 'Pattern 2: 57:57 Distribution', 
-          description: 'Perfect split between surahs whose A+B is even and surahs whose A+B is odd',
-          formula: 'COUNT(A+B even) : COUNT(A+B odd)',
+          ...m.pattern2,
           currentValue: formatPattern2(results.evenTotalCount, results.oddTotalCount),
           expectedValue: EXPECTED_LABELS.pattern2,
           isValid: validation.pattern2,
-          explanation: `Core fact "${CORE_FACTS.parityBalance.title}": Pattern 2 holds exactly when Pattern 4 does. A+B is even exactly when A and B are both even (H) or both odd (K). Since there are always 57 even and 57 odd surah numbers, the 57:57 split holds exactly when H = J (currently H = ${H}, J = ${J}), and then I = K as well.`
+          explanation: m.pattern2Explanation(t.coreFacts.parityBalance, values)
         }
 
       case 'pattern3':
         return {
-          title: 'Pattern 3: 3303 Symmetry',
-          description: 'Surah numbers where A+B is even add up to the same total as verse counts where A+B is odd',
-          formula: 'F = Σ(A where A+B even), G = Σ(B where A+B odd), F = G',
+          ...m.pattern3,
           currentValue: F === G ? String(F) : `${F}/${G}`,
           expectedValue: EXPECTED_LABELS.pattern3,
           isValid: validation.pattern3,
-          explanation: `Core fact "${CORE_FACTS.sumBalance.title}": Pattern 3 holds exactly when Pattern 1 does. F = G means the even group of A+B (F plus Σ(B where even)) equals the total verse count (G plus Σ(B where even)), which is Pattern 1. Here both sides come to 3303.`
+          explanation: m.pattern3Explanation(t.coreFacts.sumBalance)
         }
 
       case 'pattern4':
         return {
-          title: `Pattern 4: Parity Matrix ${EXPECTED_LABELS.pattern4}`,
-          description: 'Four-way classification of surahs by the parity of the surah number and of the verse count',
-          formula: 'COUNT of H (even-even) - I (even-odd) - J (odd-even) - K (odd-odd)',
+          ...m.pattern4,
+          title: `${m.pattern4.title} ${EXPECTED_LABELS.pattern4}`,
           currentValue: formatPattern4(H, results.evenSurahOddVerses, J, results.oddSurahOddVerses),
           expectedValue: EXPECTED_LABELS.pattern4,
           isValid: validation.pattern4,
-          explanation: `Core fact "${CORE_FACTS.parityBalance.title}": Pattern 4 holds exactly when Pattern 2 does. There are always 57 even and 57 odd surah numbers, so H + I = 57 and J + K = 57. The surahs with an even A+B are H + K and those with an odd A+B are I + J, so H = J (and I = K) is the same as the 57:57 split of Pattern 2. Here H = J = 30 and I = K = 27.`
+          explanation: m.pattern4Explanation(t.coreFacts.parityBalance)
         }
 
       case 'surah-numbers':
         return {
-          title: 'Column A: Surah Numbers',
-          description: 'Sequential numbering from 1 to 114',
-          formula: 'Surah index position',
-          currentValue: `Sum = ${results.sumSurahNumbers}`,
+          ...m.surahNumbers,
+          currentValue: m.sum(results.sumSurahNumbers),
           expectedValue: String(EXPECTED.sumSurahNumbers),
           isValid: results.sumSurahNumbers === EXPECTED.sumSurahNumbers,
-          explanation: 'The sum of consecutive integers from 1 to 114 always equals 6555. In Pattern 1, this is exactly the sum of A+B over the surahs whose A+B is odd.'
+          explanation: m.surahNumbersExplanation
         }
 
       case 'verse-counts':
         return {
-          title: 'Column B: Verse Counts',
-          description: 'Number of verses in each surah',
-          formula: 'Actual verse count per surah',
-          currentValue: `Sum = ${results.sumVerseCounts}`,
+          ...m.verseCounts,
+          currentValue: m.sum(results.sumVerseCounts),
           expectedValue: String(EXPECTED.sumVerseCounts),
           isValid: results.sumVerseCounts === EXPECTED.sumVerseCounts,
-          explanation: 'The total number of verses in the Quran is 6236 (Kufan count). In Pattern 1, this is exactly the sum of A+B over the surahs whose A+B is even.'
+          explanation: m.verseCountsExplanation
         }
 
       default:
         return {
-          title: 'Pattern Information',
-          description: 'Mathematical relationship in Quran structure',
-          formula: 'Various calculations',
-          currentValue: 'See table',
-          expectedValue: 'Specific values',
+          ...m.fallback,
+          currentValue: m.fallbackValue,
+          expectedValue: m.fallbackExpected,
           isValid: true,
-          explanation: 'Click a column header or a total to see the pattern it belongs to.'
+          explanation: m.fallbackExplanation
         }
     }
   }
@@ -132,7 +123,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
             <button
               onClick={onClose}
               className="text-white hover:text-gray-200 text-2xl font-bold ml-4"
-              aria-label="Close modal"
+              aria-label={t.modal.close}
             >
               ×
             </button>
@@ -147,13 +138,13 @@ export default function PatternModal({ patternId, results, validation, onClose }
             <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${
               patternInfo.isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
             }`}>
-              {patternInfo.isValid ? '✓ Holds' : `✗ Expected ${patternInfo.expectedValue}`}
+              {patternInfo.isValid ? t.modal.holds : t.modal.expected(patternInfo.expectedValue)}
             </span>
           </div>
 
           {/* Formula */}
           <div className="mb-6">
-            <h4 className="font-semibold text-gray-700 mb-2">Formula</h4>
+            <h4 className="font-semibold text-gray-700 mb-2">{t.modal.formula}</h4>
             <code className="bg-gray-100 p-3 rounded-lg block font-mono text-sm">
               {patternInfo.formula}
             </code>
@@ -161,7 +152,7 @@ export default function PatternModal({ patternId, results, validation, onClose }
 
           {/* Explanation */}
           <div>
-            <h4 className="font-semibold text-gray-700 mb-2">Explanation</h4>
+            <h4 className="font-semibold text-gray-700 mb-2">{t.modal.explanation}</h4>
             <p className="text-gray-600 leading-relaxed">{patternInfo.explanation}</p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
 import { DOCS } from '../../docs'
+import { LANGS, useLanguage, useT } from '../../i18n/LanguageContext'
 
 const GITHUB_PROFILE_URL = 'https://github.com/mirzaakhena'
 const GITHUB_REPO_URL = `${GITHUB_PROFILE_URL}/quran-checksum`
@@ -11,17 +12,40 @@ const GitHubIcon = () => (
   </svg>
 )
 
-const NAV_ITEMS = [
-  { to: '/natural-patterns', label: 'The Checksum' },
-  { to: '/mini-quran', label: 'Mini Quran Challenge' },
-  ...DOCS.map((doc) => ({ to: `/${doc.slug}`, label: doc.label }))
-]
+// EN | ID switch; the choice is remembered in this browser
+function LanguageSwitch() {
+  const { lang, setLang } = useLanguage()
+  const t = useT()
+  return (
+    <div role="group" aria-label={t.layout.languageLabel} className="inline-flex rounded-lg border border-gray-300 overflow-hidden text-sm font-medium">
+      {LANGS.map((option) => (
+        <button
+          key={option.code}
+          type="button"
+          onClick={() => setLang(option.code)}
+          aria-pressed={lang === option.code}
+          title={option.name}
+          className={`px-2.5 py-1.5 ${lang === option.code ? 'bg-quran-blue text-white' : 'text-gray-700 hover:bg-gray-50'}`}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 interface LayoutProps {
   children: ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const t = useT()
+  const navItems = [
+    { to: '/natural-patterns', label: t.layout.navChecksum },
+    { to: '/mini-quran', label: t.layout.navMiniQuran },
+    ...DOCS.map((doc) => ({ to: `/${doc.slug}`, label: t.docs.labels[doc.slug] }))
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <header className="bg-white shadow-sm border-b-2 border-quran-gold">
@@ -31,10 +55,10 @@ export default function Layout({ children }: LayoutProps) {
               Quran Checksum
             </h1>
             <p className="text-gray-600 mt-1">
-              Two facts hidden in the surah numbers and verse counts of the Quran, which you can check yourself.
+              {t.layout.subtitle}
             </p>
             <nav className="flex flex-wrap gap-x-4 gap-y-2 mt-3 text-sm font-medium">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
@@ -47,16 +71,19 @@ export default function Layout({ children }: LayoutProps) {
               ))}
             </nav>
           </div>
-          <a
-            href={GITHUB_REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 hover:bg-gray-50"
-            aria-label="Source code on GitHub"
-          >
-            <GitHubIcon />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
+          <div className="shrink-0 flex items-center gap-2">
+            <LanguageSwitch />
+            <a
+              href={GITHUB_REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 hover:bg-gray-50"
+              aria-label={t.layout.githubLabel}
+            >
+              <GitHubIcon />
+              <span className="hidden sm:inline">GitHub</span>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -66,11 +93,11 @@ export default function Layout({ children }: LayoutProps) {
 
       <footer className="bg-gray-800 text-gray-300 text-sm mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
-          Data: 114 surahs, 6236 verses (Kufan count) • Made by{' '}
+          {t.layout.footerData} • {t.layout.footerMadeBy}{' '}
           <a href={GITHUB_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="text-white underline hover:text-gray-100">
             @mirzaakhena
           </a>{' '}
-          • Educational purposes only
+          • {t.layout.footerPurpose}
         </div>
       </footer>
     </div>

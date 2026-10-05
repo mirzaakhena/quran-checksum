@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MAX_SURAHS, MIN_SURAHS, isValidSurahCount } from '../../v2/core';
+import { useT } from '../../i18n/LanguageContext';
 
 interface MiniQuranControlsProps {
   surahCount: number;
@@ -10,6 +11,7 @@ interface MiniQuranControlsProps {
 }
 
 export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQuran, onFillRandom, onClear }: MiniQuranControlsProps) {
+  const t = useT();
   const [draft, setDraft] = useState(String(surahCount));
   useEffect(() => setDraft(String(surahCount)), [surahCount]);
 
@@ -26,7 +28,7 @@ export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQu
     <section className="bg-white rounded-lg shadow-md p-4 flex flex-wrap items-end gap-4">
       <div>
         <label htmlFor="surah-count" className="block text-sm font-semibold text-gray-900">
-          Number of surahs ({MIN_SURAHS}–{MAX_SURAHS})
+          {t.miniQuran.surahCount} ({MIN_SURAHS}–{MAX_SURAHS})
         </label>
         <input
           id="surah-count"
@@ -46,25 +48,25 @@ export function MiniQuranControls({ surahCount, onSurahCountChange, onFillWithQu
         onClick={onFillWithQuran}
         className="border border-gray-300 text-gray-700 font-semibold rounded-lg px-4 py-1.5 hover:bg-gray-50"
       >
-        Fill with the Quran's verse counts
+        {t.miniQuran.fillQuran}
       </button>
       <button
         type="button"
         onClick={onFillRandom}
         className="border border-gray-300 text-gray-700 font-semibold rounded-lg px-4 py-1.5 hover:bg-gray-50"
       >
-        Fill with random verse counts
+        {t.miniQuran.fillRandom}
       </button>
       <button
         type="button"
         onClick={onClear}
         className="border border-gray-300 text-gray-700 font-semibold rounded-lg px-4 py-1.5 hover:bg-gray-50"
       >
-        Clear all
+        {t.miniQuran.clear}
       </button>
       {surahCount % 2 === 1 && (
         <p className="basis-full text-sm text-amber-700">
-          With an odd number of surahs, Patterns 2 and 4 cannot hold: they need the surahs to split into two equal halves.
+          {t.miniQuran.oddWarning}
         </p>
       )}
     </section>

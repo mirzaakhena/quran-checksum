@@ -81,7 +81,7 @@ Note: this is about the parity of **A + B**. The number of even and odd *surah n
 
 | Column | Header | Formula (row 2) | Meaning |
 |---|---|---|---|
-| **F** | Chapter if Even | `=IF(MOD(C2,2)=0,A2,"")` | the surah number, if A + B is even |
+| **F** | Surah if Even | `=IF(MOD(C2,2)=0,A2,"")` | the surah number, if A + B is even |
 | **G** | Verses if Odd | `=IF(MOD(C2,2)=1,B2,"")` | the verse count, if A + B is odd |
 
 ### Totals

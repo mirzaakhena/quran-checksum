@@ -4,9 +4,14 @@ import { Layout } from './components/layout'
 import NaturalPatterns from './pages/NaturalPatterns'
 import MiniQuran from './pages/MiniQuran'
 import { DOCS } from './docs'
+import { useT } from './i18n/LanguageContext'
 
 // The markdown renderer is only downloaded when a document page is opened
 const DocPage = lazy(() => import('./pages/DocPage'))
+
+function Loading() {
+  return <p className="text-gray-500">{useT().docs.loading}</p>
+}
 
 function App() {
   return (
@@ -21,7 +26,7 @@ function App() {
               key={doc.slug}
               path={`/${doc.slug}`}
               element={
-                <Suspense fallback={<p className="text-gray-500">Loading…</p>}>
+                <Suspense fallback={<Loading />}>
                   <DocPage doc={doc} />
                 </Suspense>
               }

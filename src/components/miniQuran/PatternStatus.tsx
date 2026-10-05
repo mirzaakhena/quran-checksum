@@ -1,5 +1,6 @@
 import { MAX_VERSES, MIN_VERSES, parseVerseCount, scoreMiniQuran } from '../../v2/core';
 import { quranData } from '../../v2/data';
+import { useT } from '../../i18n/LanguageContext';
 
 interface PatternStatusProps {
   entries: string[];
@@ -12,14 +13,15 @@ interface Comparison {
 }
 
 export function PatternStatus({ entries }: PatternStatusProps) {
+  const t = useT();
   const verseCounts = entries.map(parseVerseCount);
   const missing = verseCounts.filter((v) => v === null).length;
 
   if (missing > 0) {
     return (
       <section className="bg-white rounded-lg shadow-md p-4 text-gray-700">
-        Enter a verse count ({MIN_VERSES}–{MAX_VERSES}) for every surah to check the 4 patterns:{' '}
-        <strong>{entries.length - missing} of {entries.length}</strong> done.
+        {t.miniQuran.enterAll(MIN_VERSES, MAX_VERSES)}{' '}
+        <strong>{t.miniQuran.done(entries.length - missing, entries.length)}</strong> {t.miniQuran.doneSuffix}
       </section>
     );
   }
@@ -29,31 +31,32 @@ export function PatternStatus({ entries }: PatternStatusProps) {
   const passed = Object.values(patterns).filter(Boolean).length;
   const isQuran = surahs.length === quranData.length && surahs.every((s, i) => s.verseCount === quranData[i].verseCount);
 
+  const m = t.miniQuran;
   const rows: { name: string; valid: boolean; comparisons: Comparison[] }[] = [
     {
-      name: 'Pattern 1',
+      name: t.coreFacts.pattern(1),
       valid: patterns.pattern1,
       comparisons: [
-        { label: 'Σ (A+B) where even = Σ verses', left: r.evenTotalSum, right: r.sumVerseCounts },
-        { label: 'Σ (A+B) where odd = Σ surah numbers', left: r.oddTotalSum, right: r.sumSurahNumbers }
+        { label: m.cmp1a, left: r.evenTotalSum, right: r.sumVerseCounts },
+        { label: m.cmp1b, left: r.oddTotalSum, right: r.sumSurahNumbers }
       ]
     },
     {
-      name: 'Pattern 2',
+      name: t.coreFacts.pattern(2),
       valid: patterns.pattern2,
-      comparisons: [{ label: 'surahs with even A+B = surahs with odd A+B', left: r.evenTotalCount, right: r.oddTotalCount }]
+      comparisons: [{ label: m.cmp2, left: r.evenTotalCount, right: r.oddTotalCount }]
     },
     {
-      name: 'Pattern 3',
+      name: t.coreFacts.pattern(3),
       valid: patterns.pattern3,
-      comparisons: [{ label: 'Σ A where A+B even = Σ B where A+B odd (F = G)', left: r.chapterSumIfEvenTotal, right: r.verseSumIfOddTotal }]
+      comparisons: [{ label: m.cmp3, left: r.chapterSumIfEvenTotal, right: r.verseSumIfOddTotal }]
     },
     {
-      name: 'Pattern 4',
+      name: t.coreFacts.pattern(4),
       valid: patterns.pattern4,
       comparisons: [
-        { label: 'even-even = odd-even (H = J)', left: r.evenSurahEvenVerses, right: r.oddSurahEvenVerses },
-        { label: 'even-odd = odd-odd (I = K)', left: r.evenSurahOddVerses, right: r.oddSurahOddVerses }
+        { label: m.cmp4a, left: r.evenSurahEvenVerses, right: r.oddSurahEvenVerses },
+        { label: m.cmp4b, left: r.evenSurahOddVerses, right: r.oddSurahOddVerses }
       ]
     }
   ];
@@ -61,8 +64,8 @@ export function PatternStatus({ entries }: PatternStatusProps) {
   return (
     <section className="space-y-3">
       <h2 className="text-xl font-bold text-gray-900">
-        {passed === 4 ? 'All 4 patterns hold' : `${passed} of 4 patterns hold`}
-        {isQuran && <span className="text-sm font-normal text-gray-600"> (these are the Quran's own verse counts)</span>}
+        {passed === 4 ? m.allHold : m.someHold(passed)}
+        {isQuran && <span className="text-sm font-normal text-gray-600">{m.isQuran}</span>}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
         {rows.map((row) => (

@@ -1,17 +1,19 @@
 import { TableColumnHeadersProps } from './types'
+import { useT } from '../../i18n/LanguageContext'
 
 export default function TableColumnHeaders({
   columns,
   onHeaderClick,
   getPatternHighlight,
-  firstColumnLabel = 'Surah',
+  firstColumnLabel,
   firstColumnClassName = 'w-28'
 }: TableColumnHeadersProps) {
+  const t = useT()
   return (
     <thead className="bg-gray-100 border-b-2 md:sticky md:top-0 md:z-40 md:shadow-md md:backdrop-blur-sm md:bg-gray-100/95">
       <tr>
         <th className={`p-1 pl-2 text-left text-xs font-semibold md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm md:shadow-sm ${firstColumnClassName}`}>
-          {firstColumnLabel}
+          {firstColumnLabel ?? t.table.surah}
         </th>
         {columns.map((col) => (
           <th
@@ -24,7 +26,7 @@ export default function TableColumnHeaders({
               ${getPatternHighlight(col.id)}
             `}
             onClick={onHeaderClick ? () => onHeaderClick(col.id) : undefined}
-            title={`${col.description}\nFormula: ${col.formula}${onHeaderClick ? '\nClick for details' : ''}`}
+            title={`${col.description}\n${t.table.formulaPrefix} ${col.formula}${onHeaderClick ? `\n${t.table.clickForDetails}` : ''}`}
           >
             <div className="font-bold text-xs">{col.label}</div>
             <div className="text-xs text-gray-600 font-normal hidden sm:block">{col.description}</div>

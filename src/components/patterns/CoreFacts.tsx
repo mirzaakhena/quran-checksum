@@ -1,5 +1,6 @@
 import { PatternResults, PatternValidation } from '../../v2/types';
-import { CORE_FACTS, EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core';
+import { EXPECTED_LABELS, formatPattern1, formatPattern2, formatPattern4 } from '../../v2/core';
+import { useT } from '../../i18n/LanguageContext';
 
 interface CoreFactsProps {
   results: PatternResults;
@@ -16,47 +17,49 @@ interface PatternCard {
 }
 
 export function CoreFacts({ results, validation }: CoreFactsProps) {
+  const t = useT();
+  const c = t.coreFacts;
   const F = results.chapterSumIfEvenTotal;
   const G = results.verseSumIfOddTotal;
 
   const groups: { title: string; cards: PatternCard[] }[] = [
     {
-      title: CORE_FACTS.sumBalance.title,
+      title: c.sumBalance,
       cards: [
         {
-          name: 'Pattern 1',
+          name: c.pattern(1),
           value: formatPattern1(results.evenTotalSum, results.oddTotalSum).replace('/', ' / '),
           expected: EXPECTED_LABELS.pattern1,
-          formula: 'Σ(A+B even) = Σ verses, Σ(A+B odd) = Σ surah numbers',
+          formula: c.formula1,
           valid: validation.pattern1,
           borderClass: 'border-pattern-1-even'
         },
         {
-          name: 'Pattern 3',
+          name: c.pattern(3),
           value: F === G ? String(F) : `${F} / ${G}`,
           expected: EXPECTED_LABELS.pattern3,
-          formula: 'F = Σ(A where A+B even), G = Σ(B where A+B odd)',
+          formula: c.formula3,
           valid: validation.pattern3,
           borderClass: 'border-pattern-3-highlight'
         }
       ]
     },
     {
-      title: CORE_FACTS.parityBalance.title,
+      title: c.parityBalance,
       cards: [
         {
-          name: 'Pattern 2',
+          name: c.pattern(2),
           value: formatPattern2(results.evenTotalCount, results.oddTotalCount).replace(':', ' : '),
           expected: EXPECTED_LABELS.pattern2,
-          formula: 'Surahs with even (A+B) : odd (A+B)',
+          formula: c.formula2,
           valid: validation.pattern2,
           borderClass: 'border-pattern-1-odd'
         },
         {
-          name: 'Pattern 4',
+          name: c.pattern(4),
           value: formatPattern4(results.evenSurahEvenVerses, results.evenSurahOddVerses, results.oddSurahEvenVerses, results.oddSurahOddVerses),
           expected: EXPECTED_LABELS.pattern4,
-          formula: 'COUNT of H (even-even), I (even-odd), J (odd-even), K (odd-odd)',
+          formula: c.formula4,
           valid: validation.pattern4,
           borderClass: 'border-pattern-4-combo1'
         }
@@ -78,7 +81,7 @@ export function CoreFacts({ results, validation }: CoreFactsProps) {
                 {/* Kept on one line on wide screens; allowed to wrap on narrow ones */}
                 <p className="text-gray-600 text-sm mt-1 md:whitespace-nowrap">{card.formula}</p>
                 {!card.valid && (
-                  <p className="text-sm font-semibold text-red-600 mt-1">❌ Expected {card.expected}</p>
+                  <p className="text-sm font-semibold text-red-600 mt-1">{c.expected(card.expected)}</p>
                 )}
               </div>
             ))}

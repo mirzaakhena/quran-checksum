@@ -1,19 +1,24 @@
 import { QuranSurah } from '../../../v2/types'
 import { TableColumn } from '../types'
+import { ColumnId, Strings } from '../../../i18n/strings'
 
-export const createTableColumns = (): TableColumn[] => [
-  { id: 'A', label: 'A', description: 'Surah Number', formula: 'Surah index (1-114)', className: 'bg-gray-50 w-12' },
-  { id: 'B', label: 'B', description: 'Verse Count', formula: 'Number of verses in surah', className: 'bg-gray-50 w-16' },
-  { id: 'C', label: 'C', description: 'A + B', formula: 'Surah number + verse count', className: 'bg-blue-50 w-16' },
-  { id: 'D', label: 'D', description: 'Even (A+B)', formula: 'IF(A+B is even, A+B, "")', className: 'bg-pattern-1-even/20 w-16' },
-  { id: 'E', label: 'E', description: 'Odd (A+B)', formula: 'IF(A+B is odd, A+B, "")', className: 'bg-pattern-1-odd/20 w-16' },
-  { id: 'F', label: 'F', description: 'Surah if Even', formula: 'IF(A+B is even, A, "")', className: 'bg-green-50 w-12' },
-  { id: 'G', label: 'G', description: 'Verses if Odd', formula: 'IF(A+B is odd, B, "")', className: 'bg-yellow-50 w-12' },
-  { id: 'H', label: 'H', description: 'Even-Even', formula: 'IF(A even AND B even, ✓, "")', className: 'bg-pattern-4-combo1/20 w-10' },
-  { id: 'I', label: 'I', description: 'Even-Odd', formula: 'IF(A even AND B odd, ✓, "")', className: 'bg-pattern-4-combo2/20 w-10' },
-  { id: 'J', label: 'J', description: 'Odd-Even', formula: 'IF(A odd AND B even, ✓, "")', className: 'bg-pattern-4-combo3/20 w-10' },
-  { id: 'K', label: 'K', description: 'Odd-Odd', formula: 'IF(A odd AND B odd, ✓, "")', className: 'bg-pattern-4-combo4/20 w-10' }
+// Colours per column; the description and formula text come from the current language
+const COLUMN_STYLES: { id: ColumnId; className: string }[] = [
+  { id: 'A', className: 'bg-gray-50 w-12' },
+  { id: 'B', className: 'bg-gray-50 w-16' },
+  { id: 'C', className: 'bg-blue-50 w-16' },
+  { id: 'D', className: 'bg-pattern-1-even/20 w-16' },
+  { id: 'E', className: 'bg-pattern-1-odd/20 w-16' },
+  { id: 'F', className: 'bg-green-50 w-12' },
+  { id: 'G', className: 'bg-yellow-50 w-12' },
+  { id: 'H', className: 'bg-pattern-4-combo1/20 w-10' },
+  { id: 'I', className: 'bg-pattern-4-combo2/20 w-10' },
+  { id: 'J', className: 'bg-pattern-4-combo3/20 w-10' },
+  { id: 'K', className: 'bg-pattern-4-combo4/20 w-10' }
 ]
+
+export const createTableColumns = (text: Strings['columns']): TableColumn[] =>
+  COLUMN_STYLES.map((col) => ({ ...col, label: col.id, ...text[col.id] }))
 
 export const getCellValue = (surah: QuranSurah, columnId: string): number | string => {
   const A = surah.number

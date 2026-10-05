@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSlug from 'rehype-slug'
 import { DocEntry, REPO_URL, findDocByFile } from '../docs'
+import { useLanguage, useT } from '../i18n/LanguageContext'
 
 interface DocPageProps {
   doc: DocEntry
@@ -48,13 +49,16 @@ function DocLink({ href = '', children }: { href?: string; children?: ReactNode 
 export default function DocPage({ doc }: DocPageProps) {
   const [content, setContent] = useState<string | null>(null)
   const { hash } = useLocation()
+  const { lang } = useLanguage()
+  const t = useT()
+  const version = doc.versions[lang]
 
   useEffect(() => {
     let active = true
     setContent(null)
-    doc.load().then((module) => { if (active) setContent(module.default) })
+    version.load().then((module) => { if (active) setContent(module.default) })
     return () => { active = false }
-  }, [doc])
+  }, [version])
 
   // Headings get their ids only once the document has rendered, so jump to the anchor afterwards
   useEffect(() => {
@@ -66,15 +70,15 @@ export default function DocPage({ doc }: DocPageProps) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-gray-600">
-        Source:{' '}
-        <a href={`${REPO_URL}/blob/main/${doc.file}`} target="_blank" rel="noopener noreferrer" className="text-quran-blue underline">
-          {doc.file}
+        {t.docs.source}{' '}
+        <a href={`${REPO_URL}/blob/main/${version.file}`} target="_blank" rel="noopener noreferrer" className="text-quran-blue underline">
+          {version.file}
         </a>{' '}
-        on GitHub
+        {t.docs.onGithub}
       </p>
       <article className="bg-white rounded-lg shadow-md p-5 sm:p-8 prose prose-slate max-w-none prose-headings:scroll-mt-4 prose-table:my-0 prose-code:before:content-none prose-code:after:content-none">
         {content === null ? (
-          <p className="text-gray-500">Loading…</p>
+          <p className="text-gray-500">{t.docs.loading}</p>
         ) : (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}

@@ -12,12 +12,14 @@ import TableFooter from './TableFooter'
 import TableControls from './TableControls'
 
 import { InteractiveTableProps } from './types'
+import { useT } from '../../i18n/LanguageContext'
 import { createTableColumns, getCellValue, getColumnTotal, getColumnCount, getPatternHighlight } from './utils'
 
 export default function InteractiveTable({ className = '' }: InteractiveTableProps) {
   const { tableState, handleHeaderClick, handleCellHover, handleCellClick, handleMouseMove, handleMouseLeave, handleToggleRows, handlePatternSelect } = useTableState();
 
-  const columns = useMemo(() => createTableColumns(), [])
+  const t = useT()
+  const columns = useMemo(() => createTableColumns(t.columns), [t])
   const { results, validation } = useQuranPatterns()
 
   const wrappedGetColumnTotal = (columnId: string) => getColumnTotal(quranData, columnId)
@@ -36,7 +38,7 @@ export default function InteractiveTable({ className = '' }: InteractiveTablePro
             columns={columns}
             onHeaderClick={handleHeaderClick}
             getPatternHighlight={wrappedGetPatternHighlight}
-            firstColumnLabel="Surah Name"
+            firstColumnLabel={t.table.surahName}
           />
 
           <tbody>

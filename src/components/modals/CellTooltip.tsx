@@ -1,5 +1,6 @@
 import { QuranSurah } from '../../v2/types'
 import { useState, useEffect } from 'react'
+import { useT } from '../../i18n/LanguageContext'
 
 interface CellTooltipProps {
   column: string
@@ -10,6 +11,7 @@ interface CellTooltipProps {
 }
 
 export default function CellTooltip({ column, surah, value, formula, mousePosition }: CellTooltipProps) {
+  const t = useT()
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0, placement: 'bottom-right' })
 
   // Calculate optimal tooltip position
@@ -55,65 +57,40 @@ export default function CellTooltip({ column, surah, value, formula, mousePositi
     setTooltipPosition({ x, y, placement })
   }, [mousePosition])
   const getCalculationBreakdown = (): string => {
+    const tt = t.tooltip
     const A = surah.number
     const B = surah.verseCount
     const C = A + B
-    const isAEven = A % 2 === 0
-    const isBEven = B % 2 === 0
+    const parity = (n: number) => (n % 2 === 0 ? tt.even : tt.odd)
     const isCEven = C % 2 === 0
+    const sum = `${A} + ${B} = ${C} (${parity(C)})`
 
     switch (column) {
       case 'A':
-        return `Surah number: ${A}`
-      
+        return tt.surahNumber(A)
       case 'B':
-        return `Verse count: ${B}`
-      
+        return tt.verseCount(B)
       case 'C':
         return `${A} + ${B} = ${C}`
-      
       case 'D':
-        return isCEven 
-          ? `${A} + ${B} = ${C} (even) → ${C}` 
-          : `${A} + ${B} = ${C} (odd) → empty`
-      
+        return `${sum} → ${isCEven ? C : tt.empty}`
       case 'E':
-        return !isCEven 
-          ? `${A} + ${B} = ${C} (odd) → ${C}` 
-          : `${A} + ${B} = ${C} (even) → empty`
-      
+        return `${sum} → ${!isCEven ? C : tt.empty}`
       case 'F':
-        return isCEven 
-          ? `${A} + ${B} = ${C} (even) → chapter ${A}` 
-          : `${A} + ${B} = ${C} (odd) → empty`
-      
+        return `${sum} → ${isCEven ? tt.toSurah(A) : tt.empty}`
       case 'G':
-        return !isCEven 
-          ? `${A} + ${B} = ${C} (odd) → verses ${B}` 
-          : `${A} + ${B} = ${C} (even) → empty`
-      
+        return `${sum} → ${!isCEven ? tt.toVerses(B) : tt.empty}`
       case 'H':
-        return isAEven && isBEven 
-          ? `Surah ${A} (even) & ${B} verses (even) → ✓` 
-          : `Not even-even combination → empty`
-      
       case 'I':
-        return isAEven && !isBEven 
-          ? `Surah ${A} (even) & ${B} verses (odd) → ✓` 
-          : `Not even-odd combination → empty`
-      
       case 'J':
-        return !isAEven && isBEven 
-          ? `Surah ${A} (odd) & ${B} verses (even) → ✓` 
-          : `Not odd-even combination → empty`
-      
-      case 'K':
-        return !isAEven && !isBEven 
-          ? `Surah ${A} (odd) & ${B} verses (odd) → ✓` 
-          : `Not odd-odd combination → empty`
-      
+      case 'K': {
+        const combo = `${parity(A)}-${parity(B)}`
+        return combo === tt.combos[column]
+          ? tt.combo(A, parity(A), B, parity(B))
+          : tt.notCombo(tt.combos[column])
+      }
       default:
-        return 'Unknown calculation'
+        return tt.unknown
     }
   }
 
@@ -121,24 +98,20 @@ export default function CellTooltip({ column, surah, value, formula, mousePositi
     switch (column) {
       case 'A':
       case 'B':
-        return 'Pattern 1 reference totals (ΣA = 6555, ΣB = 6236)'
-      
+        return t.tooltip.contextAB
       case 'D':
       case 'E':
-        return 'Patterns 1 & 2: Even/Odd A+B (6236/6555, 57:57)'
-      
+        return t.tooltip.contextDE
       case 'F':
       case 'G':
-        return 'Pattern 3: Conditional Symmetry (3303/3303), same fact as Pattern 1'
-      
+        return t.tooltip.contextFG
       case 'H':
-      case 'I': 
+      case 'I':
       case 'J':
       case 'K':
-        return 'Pattern 4: 30-27-30-27 Parity Matrix, same fact as Pattern 2'
-      
+        return t.tooltip.contextHK
       default:
-        return 'Mathematical relationship in Quran structure'
+        return t.tooltip.contextDefault
     }
   }
 
@@ -179,16 +152,16 @@ export default function CellTooltip({ column, surah, value, formula, mousePositi
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
           <div className="font-bold text-gray-900">
-            {surah.name || `Surah ${surah.number}`}
+            {surah.name || t.table.surahN(surah.number)}
           </div>
           <div className="text-sm text-gray-600">
-            Column {column}
+            {t.tooltip.column(column)}
           </div>
         </div>
 
         {/* Calculation */}
         <div className="mb-2">
-          <div className="text-sm text-gray-600">Calculation:</div>
+          <div className="text-sm text-gray-600">{t.tooltip.calculation}</div>
           <div className="text-sm font-mono bg-white/80 p-2 rounded border">
             {getCalculationBreakdown()}
           </div>
@@ -196,7 +169,7 @@ export default function CellTooltip({ column, surah, value, formula, mousePositi
 
         {/* Formula */}
         <div className="mb-2">
-          <div className="text-sm text-gray-600">Formula:</div>
+          <div className="text-sm text-gray-600">{t.tooltip.formula}</div>
           <div className="text-xs font-mono text-gray-700">
             {formula}
           </div>

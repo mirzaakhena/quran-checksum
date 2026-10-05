@@ -1,6 +1,7 @@
 import { TableFooterProps } from './types'
 
 import { getPatternFromColumnId } from './utils'
+import { useT } from '../../i18n/LanguageContext'
 
 export default function TableFooter({
   columns,
@@ -9,6 +10,7 @@ export default function TableFooter({
   getPatternHighlight,
   onPatternSelect
 }: TableFooterProps) {
+  const t = useT()
   const interactive = onPatternSelect !== undefined
 
   const getFooterColorClass = (columnId: string): string => {
@@ -52,7 +54,7 @@ export default function TableFooter({
       {/* First row: TOTAL (SUM) */}
       <tr className="font-bold">
         <td className="p-1 pl-2 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
-          TOTAL
+          {t.table.total}
         </td>
         {columns.map((col) => {
           const total = getColumnTotal(col.id)
@@ -71,16 +73,11 @@ export default function TableFooter({
                 const pattern = getPatternFromColumnId(col.id)
                 if (pattern) onPatternSelect?.(pattern)
               }}
-              title={!interactive ? undefined : `
-                ${['C', 'H', 'I', 'J', 'K'].includes(col.id) 
-                  ? (col.id === 'C' 
-                      ? 'Sum not displayed (derived value)' 
-                      : 'Count values moved to COUNT row below'
-                    ) 
-                  : `Total for column ${col.id}: ${total}`
-                }
-                \nClick for pattern significance
-              `}
+              title={!interactive ? undefined : `${
+                ['C', 'H', 'I', 'J', 'K'].includes(col.id)
+                  ? (col.id === 'C' ? t.table.sumNotShown : t.table.countBelow)
+                  : t.table.totalFor(col.id, total)
+              }\n${t.table.clickForPattern}`}
             >
               {displayValue}
             </td>
@@ -91,7 +88,7 @@ export default function TableFooter({
       {/* Second row: COUNT */}
       <tr className="font-bold border-t">
         <td className="p-1 pl-2 md:sticky md:left-0 md:bg-gray-100/95 md:z-50 md:backdrop-blur-sm text-xs font-bold md:shadow-sm">
-          COUNT
+          {t.table.count}
         </td>
         {columns.map((col) => {
           const count = getColumnCount(col.id)
@@ -114,16 +111,11 @@ export default function TableFooter({
                   onPatternSelect?.('pattern4')
                 }
               }}
-              title={!interactive ? undefined : `
-                ${isCountRelevant 
-                  ? `Count of non-empty values in column ${col.id}: ${count}\n${
-                      ['D', 'E'].includes(col.id) 
-                        ? 'Part of Pattern 2: 57:57 Distribution' 
-                        : 'Part of Pattern 4: 30-27-30-27 Parity Matrix'
-                    }` 
-                  : 'Count not relevant for this column'
-                }
-              `}
+              title={!interactive ? undefined : (
+                isCountRelevant
+                  ? `${t.table.countOf(col.id, count)}\n${['D', 'E'].includes(col.id) ? t.table.partOfPattern2 : t.table.partOfPattern4}`
+                  : t.table.countNotRelevant
+              )}
             >
               {displayCount}
             </td>
